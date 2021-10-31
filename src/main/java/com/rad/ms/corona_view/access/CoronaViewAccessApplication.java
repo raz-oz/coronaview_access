@@ -5,15 +5,21 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.boot.context.event.*;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.*;
 import org.springframework.core.env.*;
 
 @SpringBootApplication
+@EnableEurekaClient
 public class CoronaViewAccessApplication implements ApplicationListener<ApplicationReadyEvent> {
+
+	@Autowired
+	private DiscoveryClient discoveryClient;
 
     @Autowired
     private ApplicationContext applicationContext;
-    
+
 	public static void main(String[] args) {
 		SpringApplication.run(CoronaViewAccessApplication.class, args);
 	}
