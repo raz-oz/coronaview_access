@@ -38,3 +38,4 @@ public class CoronaViewAccessApplication implements ApplicationListener<Applicat
 		}
 	}
 }
+
