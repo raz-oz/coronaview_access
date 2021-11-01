@@ -1,6 +1,9 @@
 package com.rad.ms.corona_view.access;
 
 import com.rad.ms.corona_view.access.Service.IAccessService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,15 +14,13 @@ public class AccessController {
 
     @Autowired
     private IAccessService accessService;
-
-
-    @RequestMapping(value="/users", method = RequestMethod.GET)
+    
+    @GetMapping("/users")
     public List<User> getAllUsers() {
         return accessService.getUsers();
     }
 
-
-    @RequestMapping(value="/users/{user_id}", method = RequestMethod.GET)
+    @GetMapping("/users/{user_id}")
     public User getUser(@PathVariable(value = "user_id") String userId) {
         return accessService.getUser(userId);
     }
@@ -39,5 +40,4 @@ public class AccessController {
     public boolean deleteUser(@PathVariable(value = "user_id") String userId){
         return accessService.deleteUser(userId);
     }
-
 }

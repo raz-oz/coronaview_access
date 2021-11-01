@@ -1,10 +1,10 @@
 package com.rad.ms.corona_view.access.Service;
 
 import com.rad.ms.corona_view.access.User;
+import com.rad.ms.corona_view.access.UserNotFoundException;
 import com.rad.ms.corona_view.access.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +16,12 @@ public class AccessService implements IAccessService {
     @Autowired
     private UserRepository userRepository;
 
-    @Override
+
     public List<User> getUsers() {
         return userRepository.findAll();
     }
 
     // TO-DO: check with Raz how to handle not valid inputs.
-    @Override
     public User addUser(User user) {
         if (user == null || user.getPassword() == null || user.getUsername() == null)
             return null;
@@ -33,13 +32,10 @@ public class AccessService implements IAccessService {
         return null;
     }
 
-    @Override
     public User getUser(String userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return user.orElse(null); // if found returns user, else null.
+        return userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(userId));
     }
 
-    @Override
     public User updateUser(String userId, User user) {
         Optional<User> user_to_update_opt = userRepository.findById(userId);
         if (user_to_update_opt.isPresent()){
@@ -53,7 +49,6 @@ public class AccessService implements IAccessService {
 
 
     //TO DO: CHECK WHAT DESIRED RETURN VALUE
-    @Override
     public boolean deleteUser(String userId) {
         // userRepository.deleteById(userId); - this one is void - can't know if deleted successfully
         Optional<User> user_to_delete_opt = userRepository.findById(userId);
