@@ -12,28 +12,30 @@ public class AccessController {
     @Autowired
     private IAccessService accessService;
 
-    @GetMapping("/users}")
+
+    @RequestMapping(value="/users", method = RequestMethod.GET)
     public List<User> getAllUsers() {
         return accessService.getUsers();
     }
 
-    @GetMapping("/users/{user_id}")
+
+    @RequestMapping(value="/users/{user_id}", method = RequestMethod.GET)
     public User getUser(@PathVariable(value = "user_id") String userId) {
         return accessService.getUser(userId);
     }
 
-    @PostMapping("/users")
+    @RequestMapping(value="/users", method = RequestMethod.POST)
     public User addUser(@RequestBody User user){
         return accessService.addUser(user);
     }
 
     // TO DO: update specific field logic
-    @PatchMapping("/users/{user_id}")
+    @RequestMapping(value="/users/{user_id}", method = RequestMethod.PATCH)
     public User updateUser(@PathVariable(value = "user_id") String userId, @RequestBody User user){
         return accessService.updateUser(userId, user);
     }
 
-    @DeleteMapping("/users/{user_id}")
+    @RequestMapping(value="/users/{user_id}", method = RequestMethod.DELETE)
     public boolean deleteUser(@PathVariable(value = "user_id") String userId){
         return accessService.deleteUser(userId);
     }
