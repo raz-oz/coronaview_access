@@ -12,10 +12,12 @@ public class AccessController {
     @Autowired
     private IAccessService accessService;
 
+
     @RequestMapping(value="/users", method = RequestMethod.GET)
     public List<User> getAllUsers() {
         return accessService.getUsers();
     }
+
 
     @RequestMapping(value="/users/{user_id}", method = RequestMethod.GET)
     public User getUser(@PathVariable(value = "user_id") String userId) {

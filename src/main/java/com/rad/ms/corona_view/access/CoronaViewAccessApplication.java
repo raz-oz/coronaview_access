@@ -1,6 +1,5 @@
 package com.example.eurekaclient;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,10 +11,12 @@ import org.springframework.core.env.Environment;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-
 @SpringBootApplication
 @EnableEurekaClient
 public class CoronaViewAccessApplication implements ApplicationListener<ApplicationReadyEvent> {
+
+	@Autowired
+	private DiscoveryClient discoveryClient;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -44,3 +45,4 @@ public class CoronaViewAccessApplication implements ApplicationListener<Applicat
         }
     }
 }
+
