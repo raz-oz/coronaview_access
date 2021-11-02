@@ -13,6 +13,7 @@ public class LoadDatabase {
             User demo = new User();
             demo.setUsername("danroiz");
             demo.setPassword("12Dan@Dan");
+            repository.deleteAll();
             repository.save(demo);
         };
     }

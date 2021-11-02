@@ -9,5 +9,5 @@ public interface IAccessService {
     User addUser(User user);
     User getUser(String userId);
     User updateUser(String userId, User user);
-    boolean deleteUser(String userId);
+    void deleteUser(String userId);
 }

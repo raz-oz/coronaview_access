@@ -1,7 +1,8 @@
 package com.rad.ms.corona_view.access.Service;
 
+import com.rad.ms.corona_view.access.ErrorHandling.InvalidInputException;
 import com.rad.ms.corona_view.access.User;
-import com.rad.ms.corona_view.access.UserNotFoundException;
+import com.rad.ms.corona_view.access.ErrorHandling.UserNotFoundException;
 import com.rad.ms.corona_view.access.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,12 @@ public class AccessService implements IAccessService {
     // TO-DO: check with Raz how to handle not valid inputs.
     public User addUser(User user) {
         if (user == null || user.getPassword() == null || user.getUsername() == null)
-            return null;
+            throw new InvalidInputException("Request has to include password and username.");
         if (validUsername(user.getUsername()) && validPassword(user.getPassword())){
             return userRepository.save(user);
         }
 
-        return null;
+        throw new InvalidInputException("Invalid password or username.");
     }
 
     public User getUser(String userId) {
@@ -37,6 +38,9 @@ public class AccessService implements IAccessService {
     }
 
     public User updateUser(String userId, User user) {
+        if (!userId.equals(user.getUsername())){
+            throw new InvalidInputException("Can not update the user username");
+        }
         Optional<User> user_to_update_opt = userRepository.findById(userId);
         if (user_to_update_opt.isPresent()){
             User user_to_update = user_to_update_opt.get();
@@ -44,28 +48,18 @@ public class AccessService implements IAccessService {
             userRepository.save(user_to_update);
             return user_to_update;
         }
-        return null; // CHECK WHAT TO RETURN IN CASE OF FAILURE
+        else
+            throw new UserNotFoundException(userId);
     }
 
 
-    //TO DO: CHECK WHAT DESIRED RETURN VALUE
-    public boolean deleteUser(String userId) {
-        // userRepository.deleteById(userId); - this one is void - can't know if deleted successfully
-        Optional<User> user_to_delete_opt = userRepository.findById(userId);
-        if (user_to_delete_opt.isPresent()){
-            User user_to_delete = user_to_delete_opt.get();
-            userRepository.delete(user_to_delete);
-            return true;
-        }
-        return false;
+    public void deleteUser(String userId) {
+        userRepository.deleteById(userId);
     }
 
     private void updateNotNullFields(User user_to_update, User updated_user) {
         if (updated_user.getPassword() != null && validPassword((updated_user.getPassword())))
             user_to_update.setPassword(updated_user.getPassword());
-        // CHECK IF CAN UPDATE USERNAME (ID) AND IF SO IF NEED TO DELETE OLD RECORD
-//        if (updated_user.getUsername() != null && validUsername(updated_user.getUsername()))
-//            user_to_update.setUsername(updated_user.getUsername());
         if (updated_user.getEmail() != null)
             user_to_update.setEmail(updated_user.getEmail());
         if (updated_user.getCellphoneNumber() != null)

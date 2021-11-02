@@ -1,4 +1,4 @@
-package com.rad.ms.corona_view.access;
+package com.rad.ms.corona_view.access.ErrorHandling;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String userId) {

@@ -14,7 +14,7 @@ public class AccessController {
 
     @Autowired
     private IAccessService accessService;
-    
+
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return accessService.getUsers();
@@ -37,7 +37,7 @@ public class AccessController {
     }
 
     @RequestMapping(value="/users/{user_id}", method = RequestMethod.DELETE)
-    public boolean deleteUser(@PathVariable(value = "user_id") String userId){
-        return accessService.deleteUser(userId);
+    public void deleteUser(@PathVariable(value = "user_id") String userId){
+        accessService.deleteUser(userId);
     }
 }
