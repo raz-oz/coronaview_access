@@ -1,9 +1,9 @@
 package com.rad.ms.corona_view.access.Service;
 
 import com.rad.ms.corona_view.access.ErrorHandling.InvalidInputException;
-import com.rad.ms.corona_view.access.User;
+import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.ErrorHandling.UserNotFoundException;
-import com.rad.ms.corona_view.access.UserRepository;
+import com.rad.ms.corona_view.access.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AccessService implements IAccessService {
+public class UserUserAccessService implements IUserAccessService {
 
     @Autowired
     private UserRepository userRepository;
@@ -22,7 +22,6 @@ public class AccessService implements IAccessService {
         return userRepository.findAll();
     }
 
-    // TO-DO: check with Raz how to handle not valid inputs.
     public User addUser(User user) {
         if (user == null || user.getPassword() == null || user.getUsername() == null)
             throw new InvalidInputException("Request has to include password and username.");

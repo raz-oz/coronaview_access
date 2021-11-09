@@ -1,6 +1,7 @@
-package com.rad.ms.corona_view.access;
+package com.rad.ms.corona_view.access.Controllers;
 
-import com.rad.ms.corona_view.access.Service.IAccessService;
+import com.rad.ms.corona_view.access.Entities.User;
+import com.rad.ms.corona_view.access.Service.IUserAccessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class AccessController {
+public class UserAccessController {
 
     @Autowired
-    private IAccessService accessService;
+    private IUserAccessService accessService;
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
@@ -30,7 +31,6 @@ public class AccessController {
         return accessService.addUser(user);
     }
 
-    // TO DO: update specific field logic
     @RequestMapping(value="/users/{user_id}", method = RequestMethod.PATCH)
     public User updateUser(@PathVariable(value = "user_id") String userId, @RequestBody User user){
         return accessService.updateUser(userId, user);

@@ -1,4 +1,4 @@
-package com.rad.ms.corona_view.access;
+package com.rad.ms.corona_view.access.Entities;
 
 
 import org.springframework.data.annotation.Id;
@@ -15,7 +15,7 @@ public class User {
     private Boolean accountNonExpired;
     private Boolean credentialsNonExpired;
     private Boolean accountNonLocked;
-
+   // private Role roleId;
     public User() {
     }
 
