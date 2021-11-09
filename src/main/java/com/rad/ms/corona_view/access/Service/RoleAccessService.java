@@ -23,17 +23,21 @@ public class RoleAccessService implements IRoleAccessService {
 
     @Override
     public List<Role> getAllRoles() {
-        return null;
+        return roleRepository.findAll();
     }
 
     @Override
     public Role addRole(Role role) {
-        return null;
+        if (role == null || role.getId() == null || role.getName() == null||role.getPermissions() == null) {
+            throw new InvalidInputException("Request has to include role id,role name and Permissions list.");
+        }
+        return roleRepository.save(role);
     }
+
 
     @Override
     public Role getRole(String roleId) {
-        return null;
+        return roleRepository.findById(roleId).orElseThrow(()->new UserNotFoundException(roleId));
     }
 
     @Override
@@ -43,11 +47,8 @@ public class RoleAccessService implements IRoleAccessService {
 
     @Override
     public void deleteRole(String roleId) {
-
+        roleRepository.deleteById(roleId);
     }
 
-    @Override
-    public Permission getPermission(String permissionId) {
-        return null;
-    }
+
 }

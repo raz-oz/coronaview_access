@@ -9,22 +9,22 @@ import java.util.Map;
 @Document
 public class Role {
     @Id
-    private final String id;
-    private final String name;
+    private final String _id;
+    private final String _name;
     private final List<Permission> permissions;
 
     public Role(String _id, String _name, List<Permission> permissions) {
-        this.id = _id;
-        this.name = _name;
+        this._id = _id;
+        this._name = _name;
         this.permissions = permissions;
     }
 
     public String getId() {
-        return id;
+        return _id;
     }
 
     public String getName() {
-        return name;
+        return _name;
     }
 
     public List<Permission> getPermissions() {
