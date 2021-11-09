@@ -22,4 +22,11 @@ public class ExceptionController {
     String invalidInputHandler(InvalidInputException ex) {
         return ex.getMessage();
     }
+
+    @ResponseBody
+    @ExceptionHandler(PermissionNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String invalidInputHandler(PermissionNotFoundException ex) {
+        return ex.getMessage();
+    }
 }
