@@ -18,7 +18,14 @@ public class Role {
         this._name = _name;
         this.permissions = permissions;
     }
-
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id='" + _id + '\'' +
+                "name='" + _name + '\'' +
+                "permissions='" + permissions + '\'' +
+                '}';
+    }
     public String getId() {
         return _id;
     }
