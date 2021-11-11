@@ -10,14 +10,25 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private String cellphoneNumber; // cellphone number
+    private String cellphoneNumber;
     private Boolean enabled;
     private Boolean accountNonExpired;
     private Boolean credentialsNonExpired;
     private Boolean accountNonLocked;
-   // private Role roleId;
+    private Role roleId;
+
     public User() {
     }
+
+    public Role getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Role roleId) {
+        this.roleId = roleId;
+    }
+
+
 
     public String getUsername() {
         return username;
@@ -90,11 +101,12 @@ public class User {
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", phone='" + cellphoneNumber + '\'' +
+                ", cellphoneNumber='" + cellphoneNumber + '\'' +
                 ", enabled=" + enabled +
                 ", accountNonExpired=" + accountNonExpired +
                 ", credentialsNonExpired=" + credentialsNonExpired +
                 ", accountNonLocked=" + accountNonLocked +
+                ", roleId=" + roleId +
                 '}';
     }
 }

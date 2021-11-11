@@ -26,7 +26,8 @@ public class ExceptionController {
     @ResponseBody
     @ExceptionHandler(PermissionNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String invalidInputHandler(PermissionNotFoundException ex) {
+    String permissionNotFoundHandler(PermissionNotFoundException ex) {
         return ex.getMessage();
     }
+
 }
