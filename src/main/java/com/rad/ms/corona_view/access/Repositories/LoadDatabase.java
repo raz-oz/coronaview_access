@@ -14,8 +14,7 @@ import java.util.List;
 public class LoadDatabase {
 
 
-//    @DependsOn("loadPredefinedData")
-    @Bean
+    @Bean("loadPredefinedData")
     CommandLineRunner loadPredefinedData(PermissionRepository repository) {
         String[] permission_names = {"all", "data_read", "data_write", "user_read", "user_write", "role_read", "role_write"};
         return args -> {
@@ -26,7 +25,8 @@ public class LoadDatabase {
         };
     }
 
-    @Bean
+    @DependsOn({"loadPredefinedData"})
+    @Bean("initRoleData")
     CommandLineRunner initRoleData(RoleRepository roleRepository, UserRepository userRepository,PermissionRepository permissionRepository) {
         String[] permission_names = {"all", "data_read", "data_write", "user_read", "user_write", "role_read", "role_write"};
         for (String name : permission_names) {
@@ -53,7 +53,7 @@ public class LoadDatabase {
         assert user_read != null;
         assert role_read != null;
         assert all != null;
-        
+
         Role admin = new Role("1", "Admin", List.of(all));
         Role Operator = new Role("2", "Operator", List.of(data_read, user_read, role_read));
         Role Monitor = new Role("3", "Monitor ", List.of(data_read));
