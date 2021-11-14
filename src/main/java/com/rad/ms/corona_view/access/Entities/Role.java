@@ -4,38 +4,55 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
-import java.util.Map;
 
 @Document
 public class Role {
     @Id
-    private final String _id;
-    private final String _name;
-    private final List<Permission> permissions;
+    private  String id;
+    private  String name;
+    private  List<Permission> permissions;
 
-    public Role(String _id, String _name, List<Permission> permissions) {
-        this._id = _id;
-        this._name = _name;
+    public Role(String id, String name, List<Permission> permissions) {
+        this.id = id;
+        this.name = name;
         this.permissions = permissions;
+    }
+    public Role() {
     }
     @Override
     public String toString() {
         return "Role{" +
-                "id='" + _id + '\'' +
-                "name='" + _name + '\'' +
+                "id='" + id + '\'' +
+                "name='" + name + '\'' +
                 "permissions='" + permissions + '\'' +
                 '}';
     }
+
+
+
+
     public String getId() {
-        return _id;
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
-        return _name;
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Permission> getPermissions() {
         return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
 }

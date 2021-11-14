@@ -6,6 +6,7 @@ import com.rad.ms.corona_view.access.Entities.User;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class LoadDatabase {
 
 
-
+//    @DependsOn("loadPredefinedData")
     @Bean
     CommandLineRunner loadPredefinedData(PermissionRepository repository) {
         String[] permission_names = {"all", "data_read", "data_write", "user_read", "user_write", "role_read", "role_write"};
@@ -26,12 +27,33 @@ public class LoadDatabase {
     }
 
     @Bean
-    CommandLineRunner initRoleData(RoleRepository roleRepository, UserRepository userRepository) {
-        Permission all = new Permission("all");
-        Permission data_read = new Permission("data_read");
-        Permission user_read = new Permission("user_read");
-        Permission role_read = new Permission("role_read");
-
+    CommandLineRunner initRoleData(RoleRepository roleRepository, UserRepository userRepository,PermissionRepository permissionRepository) {
+        String[] permission_names = {"all", "data_read", "data_write", "user_read", "user_write", "role_read", "role_write"};
+        for (String name : permission_names) {
+            if (!permissionRepository.existsById(name))
+                permissionRepository.save(new Permission(name));
+        }
+        Permission all=null;
+        Permission data_read=null;
+        Permission user_read=null;
+        Permission role_read=null;
+        if (permissionRepository.findById("all").isPresent()){
+            all = permissionRepository.findById("all").get();
+        }
+        if (permissionRepository.findById("data_read").isPresent()){
+            data_read = permissionRepository.findById("data_read").get();
+        }
+        if (permissionRepository.findById("user_read").isPresent()){
+            user_read = permissionRepository.findById("user_read").get();
+        }
+        if (permissionRepository.findById("role_read").isPresent()){
+            role_read = permissionRepository.findById("role_read").get();
+        }
+        assert data_read != null;
+        assert user_read != null;
+        assert role_read != null;
+        assert all != null;
+        
         Role admin = new Role("1", "Admin", List.of(all));
         Role Operator = new Role("2", "Operator", List.of(data_read, user_read, role_read));
         Role Monitor = new Role("3", "Monitor ", List.of(data_read));

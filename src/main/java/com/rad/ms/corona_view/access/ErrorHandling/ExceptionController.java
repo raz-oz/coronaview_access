@@ -17,6 +17,13 @@ public class ExceptionController {
     }
 
     @ResponseBody
+    @ExceptionHandler(RoleNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String roleNotFoundHandler(RoleNotFoundException ex) {
+        return ex.getMessage();
+    }
+
+    @ResponseBody
     @ExceptionHandler(InvalidInputException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String invalidInputHandler(InvalidInputException ex) {

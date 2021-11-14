@@ -4,6 +4,7 @@ import com.rad.ms.corona_view.access.Entities.Permission;
 import com.rad.ms.corona_view.access.Entities.Role;
 import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.ErrorHandling.InvalidInputException;
+import com.rad.ms.corona_view.access.ErrorHandling.RoleNotFoundException;
 import com.rad.ms.corona_view.access.ErrorHandling.UserNotFoundException;
 import com.rad.ms.corona_view.access.Repositories.RoleRepository;
 import com.rad.ms.corona_view.access.Repositories.UserRepository;
@@ -29,11 +30,10 @@ public class RoleAccessService implements IRoleAccessService {
     @Override
     public Role addRole(Role role) {
         if (role == null || role.getId() == null || role.getName() == null||role.getPermissions() == null) {
-            throw new InvalidInputException("Request has to include role id,role name and Permissions list.");
+            throw new InvalidInputException("Can not update role - These IDs already exist in the system");
         }
         return roleRepository.save(role);
     }
-
 
     @Override
     public Role getRole(String roleId) {
@@ -42,7 +42,12 @@ public class RoleAccessService implements IRoleAccessService {
 
     @Override
     public Role updateRole(String roleId, Role role) {
-        return null;
+        return roleRepository.findById(roleId)
+                .map(role_to_update -> {
+                    role_to_update.setName(role.getName());
+                    role_to_update.setPermissions(role.getPermissions());
+                    return roleRepository.save(role_to_update);
+                }).orElseThrow(() -> new RoleNotFoundException(roleId));
     }
 
     @Override

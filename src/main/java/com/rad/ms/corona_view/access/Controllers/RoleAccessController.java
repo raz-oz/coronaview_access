@@ -37,10 +37,9 @@ public class RoleAccessController {
         return RoleAccessService.getRole(roles_id);
     }
 
-    @PatchMapping(value="/roles/{roles_id}")
+    @PutMapping(value="/roles/{roles_id}")
     public Role updateRole(@PathVariable(value = "roles_id") String roleId, @RequestBody Role role){
         return RoleAccessService.updateRole(roleId, role);
     }
-
 
 }
