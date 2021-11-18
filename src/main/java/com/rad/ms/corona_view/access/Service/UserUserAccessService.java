@@ -18,19 +18,21 @@ public class UserUserAccessService implements IUserAccessService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private IRoleAccessService roleAccessService;
 
     public List<User> getUsers() {
         return userRepository.findAll();
     }
 
     public User addUser(User user) {
-        if (user == null || user.getPassword() == null || user.getUsername() == null)
-            throw new InvalidInputException("Request has to include password and username.");
-        if (validUsername(user.getUsername()) && validPassword(user.getPassword())){
+        if (user == null || user.getPassword() == null || user.getUsername() == null || user.getRoleId() == null)
+            throw new InvalidInputException("Request has to include password, username and role id.");
+        if (validUsername(user.getUsername()) && validPassword(user.getPassword()) && roleAccessService.existsById(user.getRoleId())){
             return userRepository.save(user);
         }
 
-        throw new InvalidInputException("Invalid password or username.");
+        throw new InvalidInputException("A new user must include valid username, password and role id.");
     }
 
     public User getUser(String userId) {
@@ -72,6 +74,9 @@ public class UserUserAccessService implements IUserAccessService {
             user_to_update.setCredentialsNonExpired(updated_user.getCredentialsNonExpired());
         if (updated_user.getEnabled() != null)
             user_to_update.setEnabled(updated_user.getEnabled());
+        if (updated_user.getRoleId() != null && roleAccessService.existsById(updated_user.getRoleId())){
+            user_to_update.setRoleId(updated_user.getRoleId());
+        }
     }
 
     private boolean validPassword(String password) {

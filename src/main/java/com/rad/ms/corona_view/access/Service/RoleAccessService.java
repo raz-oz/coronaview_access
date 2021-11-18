@@ -37,7 +37,7 @@ public class RoleAccessService implements IRoleAccessService {
 
     @Override
     public Role getRole(String roleId) {
-        return roleRepository.findById(roleId).orElseThrow(()->new UserNotFoundException(roleId));
+        return roleRepository.findById(roleId).orElseThrow(()->new RoleNotFoundException(roleId));
     }
 
     @Override
@@ -53,6 +53,11 @@ public class RoleAccessService implements IRoleAccessService {
     @Override
     public void deleteRole(String roleId) {
         roleRepository.deleteById(roleId);
+    }
+
+    @Override
+    public boolean existsById(String roleId) {
+        return roleRepository.existsById(roleId);
     }
 
 

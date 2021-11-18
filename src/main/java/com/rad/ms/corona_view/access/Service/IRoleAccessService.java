@@ -13,4 +13,5 @@ public interface IRoleAccessService {
     Role getRole(String roleId);
     Role updateRole(String roleId, Role role);
     void deleteRole(String roleId);
+    boolean existsById(String roleId);
 }

@@ -15,16 +15,16 @@ public class User {
     private Boolean accountNonExpired;
     private Boolean credentialsNonExpired;
     private Boolean accountNonLocked;
-    private Role roleId;
+    private String roleId;
 
     public User() {
     }
 
-    public Role getRoleId() {
+    public String getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Role roleId) {
+    public void setRoleId(String roleId) {
         this.roleId = roleId;
     }
 

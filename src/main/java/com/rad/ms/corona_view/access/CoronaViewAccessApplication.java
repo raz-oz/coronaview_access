@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableEurekaClient
-//@ComponentScan("com.rad.ms.corona_view")
 public class CoronaViewAccessApplication {
 
     public static void main(String[] args) {
