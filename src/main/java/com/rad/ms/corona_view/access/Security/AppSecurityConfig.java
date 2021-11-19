@@ -28,28 +28,25 @@ import java.util.Properties;
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-
-    //init all users as User details obj and adding them to the DB
-    @Bean
-    protected UserDetailsService userDetailsService(UserRepository repository){
-        List<UserDetails> SecurityUser = new ArrayList<>();
-        for (User u:repository.findAll())
-            SecurityUser.add(org.springframework.security.core.userdetails.User.withDefaultPasswordEncoder().username(u.getUsername()).password(u.getPassword()).roles(u.getRoleId().getName()).build());
-        return new InMemoryUserDetailsManager(SecurityUser);
-    };
-
-
-
 //    @Autowired
-//    private UserDetailsService userDetailsService;
+//    //init all users as User details obj and adding them to the DB
 //    @Bean
-//    public AuthenticationProvider authProvider(){
-//        DaoAuthenticationProvider provider= new DaoAuthenticationProvider();
-//        provider.setUserDetailsService(userDetailsService);
-//        provider.setPasswordEncoder(new BCryptPasswordEncoder());
-//        return provider;
-//    }
+//    protected UserDetailsService userDetailsService(UserRepository repository){
+//        List<UserDetails> SecurityUser = new ArrayList<>();
+//        for (User u:repository.findAll())
+//            SecurityUser.add(org.springframework.security.core.userdetails.User.withDefaultPasswordEncoder().username(u.getUsername()).password(u.getPassword()).roles(u.getRoleId().getName()).build());
+//        return new InMemoryUserDetailsManager(SecurityUser);
+//    };
+
+    @Autowired
+    protected UserDetailsService userDetailsService;
+    @Bean
+    public AuthenticationProvider authProvider(UserDetailsService userDetailsService){
+        DaoAuthenticationProvider provider= new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(new BCryptPasswordEncoder());
+        return provider;
+    }
 
 
 }

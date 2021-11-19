@@ -6,11 +6,10 @@ import com.rad.ms.corona_view.access.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -73,8 +72,9 @@ public class LoadDatabase {
     return () -> {
         User demo = new User();
         demo.setUsername("danroiz");
-        demo.setPassword("1234");
-        demo.setRoleId(roleRepository.findRoleById("1"));
+        BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+        demo.setPassword(bc.encode("1234"));
+        demo.setRole(roleRepository.findRoleById("1"));
         repository.save(demo);
         };
     }

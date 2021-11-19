@@ -15,17 +15,17 @@ public class User {
     private Boolean accountNonExpired;
     private Boolean credentialsNonExpired;
     private Boolean accountNonLocked;
-    private Role roleId;
+    private Role role;
 
     public User() {
     }
 
-    public Role getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleId(Role roleId) {
-        this.roleId = roleId;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
 
@@ -106,7 +106,7 @@ public class User {
                 ", accountNonExpired=" + accountNonExpired +
                 ", credentialsNonExpired=" + credentialsNonExpired +
                 ", accountNonLocked=" + accountNonLocked +
-                ", roleId=" + roleId +
+                ", roleId=" + role +
                 '}';
     }
 }
