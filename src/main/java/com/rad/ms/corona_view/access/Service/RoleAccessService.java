@@ -37,7 +37,7 @@ public class RoleAccessService implements IRoleAccessService {
 
     @Override
     public Role getRole(String roleId) {
-        return roleRepository.findById(roleId).orElseThrow(()->new UserNotFoundException(roleId));
+        return roleRepository.findById(roleId).orElseThrow(()->new RoleNotFoundException(roleId));
     }
 
     @Override

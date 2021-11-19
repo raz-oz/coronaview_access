@@ -67,6 +67,19 @@ public class LoadDatabase {
           User test = new User();
         };
     }
+    @Bean
+    @DependsOn("initRoleData")
+    InitializingBean initDatabase(UserRepository repository,RoleRepository roleRepository) {
+    return () -> {
+        User demo = new User();
+        demo.setUsername("danroiz");
+        demo.setPassword("1234");
+        demo.setRoleId(roleRepository.findRoleById("1"));
+        repository.save(demo);
+        };
+    }
+
+
 }
 
 
