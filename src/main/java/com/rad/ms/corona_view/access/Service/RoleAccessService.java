@@ -55,5 +55,10 @@ public class RoleAccessService implements IRoleAccessService {
         roleRepository.deleteById(roleId);
     }
 
+    @Override
+    public boolean existsById(String roleId) {
+        return roleRepository.existsById(roleId);
+    }
+
 
 }
