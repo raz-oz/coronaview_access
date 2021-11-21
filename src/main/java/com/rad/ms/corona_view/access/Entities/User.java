@@ -3,6 +3,7 @@ package com.rad.ms.corona_view.access.Entities;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Document
 public class User {
@@ -16,8 +17,30 @@ public class User {
     private Boolean credentialsNonExpired;
     private Boolean accountNonLocked;
     private String roleId;
+    private Role role;
+
+    public static final BCryptPasswordEncoder BC = new BCryptPasswordEncoder();
 
     public User() {
+    }
+
+    public User(String username,String password,Role role) {
+        this.username=username;
+        this.password=BC.encode(password);
+        this.role= role;
+        this.roleId= role.getId();
+        this.enabled = true;
+        this.accountNonExpired= true;
+        this.credentialsNonExpired= true;
+        this.accountNonLocked= true;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getRoleId() {
@@ -25,7 +48,7 @@ public class User {
     }
 
     public void setRoleId(String roleId) {
-        this.roleId = roleId;
+        this.roleId= roleId;
     }
 
 
@@ -44,7 +67,8 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+
+        this.password = BC.encode(password);
     }
 
     public String getEmail() {
@@ -106,7 +130,7 @@ public class User {
                 ", accountNonExpired=" + accountNonExpired +
                 ", credentialsNonExpired=" + credentialsNonExpired +
                 ", accountNonLocked=" + accountNonLocked +
-                ", roleId=" + roleId +
+                ", roleId=" + roleId.toString() +
                 '}';
     }
 }

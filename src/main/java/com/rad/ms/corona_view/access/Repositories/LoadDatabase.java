@@ -74,16 +74,22 @@ public class LoadDatabase {
     InitializingBean initUserData() {
         return () -> {
             log.info("Initializing predefined users.");
-          User raz = new User(); raz.setUsername("raz"); raz.setRoleId("1");
-          User shahar = new User(); shahar.setUsername("shahar"); shahar.setRoleId("1");
-          User dan = new User(); dan.setUsername("dan"); dan.setRoleId("2");
-          User moshe = new User(); moshe.setUsername("moshe"); moshe.setRoleId("3");
-          User test = new User(); test.setUsername("Test"); moshe.setRoleId("0");
-          for (User user: List.of(raz,shahar,dan,moshe,test)){
-              if (!userRepository.existsById(user.getUsername())){
-                  userRepository.save(user);
-              }
-          }
+//          User raz = new User(); raz.setUsername("raz"); raz.setRoleId("1");
+//          User shahar = new User(); shahar.setUsername("shahar"); shahar.setRoleId("1");
+//          User dan = new User(); dan.setUsername("dan"); dan.setRoleId("2");
+//          User moshe = new User(); moshe.setUsername("moshe"); moshe.setRoleId("3");
+//          User test = new User(); test.setUsername("Test"); moshe.setRoleId("0");
+//
+//          for (User user: List.of(raz,shahar,dan,moshe,test)){
+//              if (!userRepository.existsById(user.getUsername())){
+//                  userRepository.save(user);
+//              }
+//          }
+            userRepository.save(new User("Raz","1234",roleRepository.findRoleById("1")));
+            userRepository.save(new User("Shahar","1234",roleRepository.findRoleById("1")));
+            userRepository.save(new User("Dan","1234",roleRepository.findRoleById("2")));
+            userRepository.save(new User("Moshe","1234",roleRepository.findRoleById("3")));
+            userRepository.save(new User("Test","1234",roleRepository.findRoleById("0")));
             log.info("Finished to initialize predefined users.");
         };
     }
