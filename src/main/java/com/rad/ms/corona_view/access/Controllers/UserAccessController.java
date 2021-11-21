@@ -1,6 +1,7 @@
 package com.rad.ms.corona_view.access.Controllers;
 
 import com.rad.ms.corona_view.access.Entities.User;
+import com.rad.ms.corona_view.access.Security.UserService;
 import com.rad.ms.corona_view.access.Service.IUserAccessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,11 +15,18 @@ import java.util.List;
 public class UserAccessController {
 
     @Autowired
+    public UserService us;
+
+    @Autowired
     private IUserAccessService accessService;
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
-        return accessService.getUsers();
+        if(us.getCurrUserRole().equals("Admin")){
+            return accessService.getUsers();
+        }
+        else
+            return null;
     }
 
     @GetMapping("/users/{user_id}")
