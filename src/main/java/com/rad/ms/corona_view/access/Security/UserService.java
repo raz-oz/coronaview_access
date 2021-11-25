@@ -20,7 +20,6 @@ public class UserService implements ApplicationListener<AuthenticationSuccessEve
     UserRepository userRepository;
     private com.rad.ms.corona_view.access.Entities.User CurrUSER;
 
-
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         String userName = ((UserDetails) event.getAuthentication().

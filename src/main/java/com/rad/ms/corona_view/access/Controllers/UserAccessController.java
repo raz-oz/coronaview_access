@@ -1,6 +1,8 @@
 package com.rad.ms.corona_view.access.Controllers;
 
 import com.rad.ms.corona_view.access.Entities.User;
+import com.rad.ms.corona_view.access.ErrorHandling.PermissionException;
+import com.rad.ms.corona_view.access.ErrorHandling.UserNotFoundException;
 import com.rad.ms.corona_view.access.Security.UserService;
 import com.rad.ms.corona_view.access.Service.IUserAccessService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +22,11 @@ public class UserAccessController {
     @Autowired
     private IUserAccessService accessService;
 
+
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        if(us.getCurrUserRole().equals("Admin")){
-            return accessService.getUsers();
-        }
-        else
-            return null;
+    public List<User> getAllUsers(){
+        UserAuth();
+        return accessService.getUsers();
     }
 
     @GetMapping("/users/{user_id}")
@@ -47,5 +47,11 @@ public class UserAccessController {
     @RequestMapping(value="/users/{user_id}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable(value = "user_id") String userId){
         accessService.deleteUser(userId);
+    }
+
+    public void UserAuth(){
+        if(!us.getCurrUserRole().equals("Admin")){
+            throw  new PermissionException(us.getCurrUSER().getUsername());
+        }
     }
 }

@@ -37,4 +37,17 @@ public class ExceptionController {
         return ex.getMessage();
     }
 
+    @ResponseBody
+    @ExceptionHandler(PermissionException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    String permissionHandler(PermissionException ex) {
+        return ex.getMessage();
+    }
+
+//    @ResponseBody
+//    @ExceptionHandler(UserNotFoundException.class)
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    String authenticationFailureHandler(authException ex) {
+//        return ex.getMessage();
+//    }
 }

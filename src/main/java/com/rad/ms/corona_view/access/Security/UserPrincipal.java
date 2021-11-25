@@ -1,12 +1,17 @@
 package com.rad.ms.corona_view.access.Security;
 
 import com.rad.ms.corona_view.access.Entities.User;
+import com.rad.ms.corona_view.access.Repositories.RoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserPrincipal implements UserDetails {
+
     private User user;
 
     public UserPrincipal(User user) {
@@ -16,6 +21,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
         return null;
     }
 
