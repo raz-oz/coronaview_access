@@ -2,10 +2,7 @@ package com.rad.ms.corona_view.access.Controllers;
 
 
 import com.rad.ms.corona_view.access.Entities.Permission;
-import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.Service.IPermissionAccessService;
-import com.rad.ms.corona_view.access.Service.IUserAccessService;
-import com.rad.ms.corona_view.access.Service.PermissionAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

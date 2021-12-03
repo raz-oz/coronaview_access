@@ -7,11 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -26,6 +25,8 @@ public class LoadDatabase {
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Bean("initPermissionsData")
     InitializingBean initPermissionsData() {
@@ -74,12 +75,12 @@ public class LoadDatabase {
     InitializingBean initUserData() {
         return () -> {
             log.info("Initializing predefined users.");
-            String BCrpytPass_123 = "$2a$12$KDNJd9j3xxj2eLPRMkGSKOz5.2.cKHu3LXUc.trx5D2gAuKquYQZC";
-          User raz = new User(); raz.setUsername("raz"); raz.setRoleId("1"); raz.setPassword("123");
-          User shahar = new User(); shahar.setUsername("shahar"); shahar.setRoleId("1"); shahar.setPassword(BCrpytPass_123);
-          User dan = new User(); dan.setUsername("dan"); dan.setRoleId("2"); dan.setPassword("123");
-          User moshe = new User(); moshe.setUsername("moshe"); moshe.setRoleId("3");moshe.setPassword(BCrpytPass_123);
-          User test = new User(); test.setUsername("Test"); test.setRoleId("0"); test.setPassword(BCrpytPass_123);
+           String password = passwordEncoder.encode("123");
+          User raz = new User(); raz.setUsername("raz"); raz.setRoleId("1"); raz.setPassword(password);
+          User shahar = new User(); shahar.setUsername("shahar"); shahar.setRoleId("1"); shahar.setPassword(password);
+          User dan = new User(); dan.setUsername("dan"); dan.setRoleId("2"); dan.setPassword(password);
+          User moshe = new User(); moshe.setUsername("moshe"); moshe.setRoleId("3");moshe.setPassword(password);
+          User test = new User(); test.setUsername("Test"); test.setRoleId("0"); test.setPassword(password);
           for (User user: List.of(raz,shahar,dan,moshe,test)){
               if (!userRepository.existsById(user.getUsername())){
                   userRepository.save(user);

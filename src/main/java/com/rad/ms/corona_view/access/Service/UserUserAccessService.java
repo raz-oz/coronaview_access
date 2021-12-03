@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -59,7 +58,7 @@ public class UserUserAccessService implements IUserAccessService, UserDetailsSer
 
     public User updateUser(String userId, User user) {
         if (!userId.equals(user.getUsername())){
-            throw new InvalidInputException("Can not update the user username");
+            throw new InvalidInputException("Can not update username field");
         }
         Optional<User> user_to_update_opt = userRepository.findById(userId);
         if (user_to_update_opt.isPresent()){
@@ -71,7 +70,6 @@ public class UserUserAccessService implements IUserAccessService, UserDetailsSer
         else
             throw new UserNotFoundException(userId);
     }
-
 
     public void deleteUser(String userId) {
         userRepository.deleteById(userId);
@@ -135,6 +133,4 @@ public class UserUserAccessService implements IUserAccessService, UserDetailsSer
         }
         return valid;
     }
-
-
 }

@@ -1,47 +1,38 @@
 package com.rad.ms.corona_view.access.JWT;
 
-import com.google.common.net.HttpHeaders;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import com.auth0.jwt.algorithms.Algorithm;
 
-@Configuration
 public class JwtConfig {
+    private final String secretKey;
+    private final String tokenPrefix;
+    private final Algorithm algorithm;
 
-    private String secretKey;
-    private String tokenPrefix;
-    private Integer tokenExpirationAfterDays;
+    public long getExpirationTime() {
+        return 10*60*1000; // 10 Minutes
+    }
 
-    public JwtConfig() {
+    private static class SingletonHolder {
+        private static JwtConfig instance = new JwtConfig();
+    }
+    private JwtConfig() {
         secretKey = "DA6E1D6DFE98B97FC7AA8A7B95B52";
         tokenPrefix = "Bearer ";
-        tokenExpirationAfterDays = 1;
+        algorithm = Algorithm.HMAC256(secretKey.getBytes());
+    }
+    public static JwtConfig getInstance() {
+        return SingletonHolder.instance;
     }
 
     public String getSecretKey() {
         return secretKey;
     }
 
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
     public String getTokenPrefix() {
         return tokenPrefix;
     }
 
-    public void setTokenPrefix(String tokenPrefix) {
-        this.tokenPrefix = tokenPrefix;
-    }
-
-    public Integer getTokenExpirationAfterDays() {
-        return tokenExpirationAfterDays;
-    }
-
-    public void setTokenExpirationAfterDays(Integer tokenExpirationAfterDays) {
-        this.tokenExpirationAfterDays = tokenExpirationAfterDays;
-    }
-
-    public String getAuthorizationHeader() {
-        return HttpHeaders.AUTHORIZATION;
+    public Algorithm getAlgorithm() {
+        return algorithm;
     }
 }
+

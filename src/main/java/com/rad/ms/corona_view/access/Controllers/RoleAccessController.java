@@ -1,9 +1,7 @@
 package com.rad.ms.corona_view.access.Controllers;
 
 import com.rad.ms.corona_view.access.Entities.Role;
-import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.Service.IRoleAccessService;
-import com.rad.ms.corona_view.access.Service.IUserAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +12,6 @@ public class RoleAccessController {
 
     @Autowired
     private IRoleAccessService RoleAccessService;
-
-
 
     @GetMapping("/roles")
     public List<Role> getAllRoles () {
