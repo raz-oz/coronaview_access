@@ -19,7 +19,6 @@ public class UserAccessController {
 
 
     @GetMapping("/users")
-    @PreAuthorize("hasRole('1')")
     public List<User> getAllUsers() {
         return accessService.getUsers();
     }
