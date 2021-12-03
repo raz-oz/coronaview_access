@@ -2,6 +2,7 @@ package com.rad.ms.corona_view.access.Controllers;
 
 import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.Service.IUserAccessService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,9 @@ public class UserAccessController {
     @Autowired
     private IUserAccessService accessService;
 
+
     @GetMapping("/users")
+    @PreAuthorize("hasRole('1')")
     public List<User> getAllUsers() {
         return accessService.getUsers();
     }
