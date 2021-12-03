@@ -1,13 +1,19 @@
 package com.rad.ms.corona_view.access.Security;
 
-import io.jsonwebtoken.io.IOException;
-import org.springframework.web.filter.OncePerRequestFilter;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
@@ -43,10 +49,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         UserPrincipal userPrincipal = tokenService.parseToken(token);
 
         List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(userPrincipal.getRoleId()));
 
-        if (userPrincipal.isAdmin()) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
 
         return new UsernamePasswordAuthenticationToken(userPrincipal, null, authorities);
     }

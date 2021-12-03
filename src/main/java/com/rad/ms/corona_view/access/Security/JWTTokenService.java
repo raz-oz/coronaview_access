@@ -6,12 +6,14 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
+@Service
 public class JWTTokenService implements  TokenService{
     private static final String JWT_SECRET = "EDF44B726C9596F6BCFEC99C68227";
 
