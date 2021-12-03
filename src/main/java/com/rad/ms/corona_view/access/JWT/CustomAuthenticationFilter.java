@@ -1,4 +1,4 @@
-package com.rad.ms.corona_view.access.Security;
+package com.rad.ms.corona_view.access.JWT;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

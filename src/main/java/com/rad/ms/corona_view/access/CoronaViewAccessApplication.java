@@ -17,8 +17,8 @@ public class CoronaViewAccessApplication {
         SpringApplication.run(CoronaViewAccessApplication.class, args);
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder(){
+//        return new BCryptPasswordEncoder();
+//    }
 }
