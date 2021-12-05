@@ -66,14 +66,10 @@ public class UserUserAccessService implements IUserAccessService {
             user_to_update.setEmail(updated_user.getEmail());
         if (updated_user.getCellphoneNumber() != null)
             user_to_update.setCellphoneNumber(updated_user.getCellphoneNumber());
-        if (updated_user.getAccountNonExpired() != null)
-            user_to_update.setAccountNonExpired(updated_user.getAccountNonExpired());
-        if (updated_user.getAccountNonLocked() != null)
-            user_to_update.setAccountNonLocked(updated_user.getAccountNonLocked());
-        if (updated_user.getCredentialsNonExpired() != null)
-            user_to_update.setCredentialsNonExpired(updated_user.getCredentialsNonExpired());
-        if (updated_user.getEnabled() != null)
-            user_to_update.setEnabled(updated_user.getEnabled());
+        user_to_update.setAccountNonExpired(updated_user.isAccountNonExpired());
+        user_to_update.setAccountNonLocked(updated_user.isAccountNonLocked());
+        user_to_update.setCredentialsNonExpired(updated_user.isCredentialsNonExpired());
+        user_to_update.setEnabled(updated_user.isEnabled());
         if (updated_user.getRoleId() != null && roleAccessService.existsById(updated_user.getRoleId())){
             user_to_update.setRoleId(updated_user.getRoleId());
         }
