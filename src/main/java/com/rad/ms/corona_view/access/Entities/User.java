@@ -1,33 +1,20 @@
 package com.rad.ms.corona_view.access.Entities;
 
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class User {
+public class User  {
     @Id
     private String username;
     private String password;
     private String email;
     private String cellphoneNumber;
-    private Boolean enabled;
-    private Boolean accountNonExpired;
-    private Boolean credentialsNonExpired;
-    private Boolean accountNonLocked;
+    private boolean isAccountNonExpired;
+    private boolean isAccountNonLocked;
+    private boolean isCredentialsNonExpired;
+    private boolean isEnabled;
     private String roleId;
-
-    public User() {
-    }
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
-    }
-
 
 
     public String getUsername() {
@@ -35,9 +22,9 @@ public class User {
     }
 
     public void setUsername(String username) {
-
         this.username = username;
     }
+
 
     public String getPassword() {
         return password;
@@ -63,50 +50,46 @@ public class User {
         this.cellphoneNumber = cellphoneNumber;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
+
+    public boolean isAccountNonExpired() {
+        return isAccountNonExpired;
     }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        isAccountNonExpired = accountNonExpired;
     }
 
-    public Boolean getAccountNonExpired() {
-        return accountNonExpired;
+
+    public boolean isAccountNonLocked() {
+        return isAccountNonLocked;
     }
 
-    public void setAccountNonExpired(Boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
     }
 
-    public Boolean getCredentialsNonExpired() {
-        return credentialsNonExpired;
+
+    public boolean isCredentialsNonExpired() {
+        return isCredentialsNonExpired;
     }
 
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        isCredentialsNonExpired = credentialsNonExpired;
     }
 
-    public Boolean getAccountNonLocked() {
-        return accountNonLocked;
+    public boolean isEnabled() {
+        return isEnabled;
     }
 
-    public void setAccountNonLocked(Boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", cellphoneNumber='" + cellphoneNumber + '\'' +
-                ", enabled=" + enabled +
-                ", accountNonExpired=" + accountNonExpired +
-                ", credentialsNonExpired=" + credentialsNonExpired +
-                ", accountNonLocked=" + accountNonLocked +
-                ", roleId=" + roleId +
-                '}';
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 }
