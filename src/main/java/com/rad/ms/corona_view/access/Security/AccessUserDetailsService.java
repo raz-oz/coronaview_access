@@ -17,7 +17,6 @@ public class AccessUserDetailsService implements UserDetailsService {
         User CurrUser = userRepository.getUserByUsername(s);
         if(CurrUser==null)
             throw new UsernameNotFoundException(s);
-        return new UserPrincipal(CurrUser);
+        return new UserDetailsConfig(CurrUser);
     }
-
 }
