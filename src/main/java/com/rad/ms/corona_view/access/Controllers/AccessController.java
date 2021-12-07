@@ -1,8 +1,15 @@
 package com.rad.ms.corona_view.access.Controllers;
 
-import com.rad.ms.corona_view.access.Security.UserService;
+import com.rad.ms.corona_view.access.Security.SecurityConfig;
+import com.rad.ms.corona_view.access.Security.UserDetailsConfig;
+//import com.rad.ms.corona_view.access.Security.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,13 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AccessController {
 
-    @Autowired
-    public UserService us;
-
     @RequestMapping(value="/")
     public String goHome(){
-        if (us.getCurrUSER()!=null)
-            return ("Hello " + us.getCurrUSER().getUsername());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String user = (String) auth.getPrincipal();
+        if (user!=null)
+            return ("Hello " + user);
         else
             return "Hello guest";
     }

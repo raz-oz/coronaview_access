@@ -3,15 +3,20 @@ package com.rad.ms.corona_view.access.Controllers;
 import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.ErrorHandling.PermissionException;
 import com.rad.ms.corona_view.access.ErrorHandling.UserNotFoundException;
-import com.rad.ms.corona_view.access.Security.UserService;
+//import com.rad.ms.corona_view.access.Security.UserService;
 import com.rad.ms.corona_view.access.Service.IUserAccessService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 /**"""all", "data_read", "data_write", "user_read", "user_write", "role_read", "role_write"""*/
 @RestController
@@ -19,7 +24,7 @@ import java.util.List;
 public class UserAccessController {
 
     @Autowired
-    public UserService us;
+    protected UserDetailsService userDetailsService;
 
     @Autowired
     private IUserAccessService accessService;
@@ -57,14 +62,16 @@ public class UserAccessController {
 
 
     public void limitAccesses(String id){
-        if(!us.getCurrUserRole().equals("Admin") && !us.getCurrUSER().getUsername().equals(id)){
-            throw  new PermissionException(us.getCurrUSER().getUsername());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> Permissions =  auth.getAuthorities();
+        if(!(Permissions.toString().contains("all") || Permissions.toString().contains("user_read")) && !auth.getPrincipal().toString().equals(id)){
+            throw  new PermissionException(auth.getPrincipal().toString());
         }
     }
-
-    public void adminAccesses(){
-        if(!us.getCurrUserRole().equals("Admin")){
-            throw  new PermissionException(us.getCurrUSER().getUsername());
-        }
-    }
+//
+//    public void adminAccesses(){
+//        if(!us.getCurrUserRole().equals("Admin")){
+//            throw  new PermissionException(us.getCurrUSER().getUsername());
+//        }
+//    }
 }
