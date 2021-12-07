@@ -26,7 +26,7 @@ public class UserAccessController {
 
 
     @GetMapping
-    @PreAuthorize("hasAuthoritys('all','user_write')")
+    @PreAuthorize("hasAuthority('all') || hasAuthority('user_read')")
     public List<User> getAllUsers(){
         return accessService.getUsers();
     }
@@ -38,19 +38,19 @@ public class UserAccessController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthoritys('all','user_write')")
+    @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
     public User addUser(@RequestBody User user){
         return accessService.addUser(user);
     }
 
     @PatchMapping("{user_id}")
-    @PreAuthorize("hasAuthoritys('all','user_write')")
+    @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
     public User updateUser(@PathVariable(value = "user_id") String userId, @RequestBody User user){
         return accessService.updateUser(userId, user);
     }
 
     @DeleteMapping(value="{user_id}")
-    @PreAuthorize("hasAuthoritys('all','user_write')")
+    @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
     public void deleteUser(@PathVariable(value = "user_id") String userId){
         accessService.deleteUser(userId);
     }

@@ -2,6 +2,8 @@ package com.rad.ms.corona_view.access.JWT;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rad.ms.corona_view.access.Entities.User;
+import com.rad.ms.corona_view.access.Security.UserDetailsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +48,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain, Authentication authentication) throws IOException {
-        User user = (User) authentication.getPrincipal();
+        UserDetailsConfig user = (UserDetailsConfig) authentication.getPrincipal();
         JwtConfig jwtConfig = JwtConfig.getInstance();
         String access_token = JWT.create()
                 .withSubject(user.getUsername())

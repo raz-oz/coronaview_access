@@ -73,17 +73,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 ////                .jwt().jwtAuthenticationConverter(authenticationConverter());
 //    }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//
-//        http
-//                .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
-//                .authorizeRequests().anyRequest().authenticated();
-//    }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        http
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+                .authorizeRequests().anyRequest().authenticated();
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

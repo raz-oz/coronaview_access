@@ -17,13 +17,11 @@ public class UserDetailsConfig implements UserDetails {
      * This class is responsible for managing the user who is currently trying to connect to the system
      * **/
     private final User user;
-    private final Role role;
 
     //Saves the instance of the user who has just requested 2 login
     public UserDetailsConfig(User user) {
         super();
         this.user = user;
-        this.role = user.getRole();
     }
 
     //Creates a new authority for the user in the current login to the system - according to his role
@@ -73,7 +71,7 @@ public class UserDetailsConfig implements UserDetails {
     //Creates a new authorities for user permissions in the system - According to those we have defined
     private List<GrantedAuthority> getGrantedAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Permission permission : this.role.getPermissions()) {
+        for (Permission permission : this.user.getRole().getPermissions()) {
             authorities.add(new SimpleGrantedAuthority(permission.getName()));
         }
         return authorities;
