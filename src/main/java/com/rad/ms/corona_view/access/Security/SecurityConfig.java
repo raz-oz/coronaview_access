@@ -47,44 +47,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 
-//    @Override
-//    protected void configure(final HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .authorizeRequests()
-////                .antMatchers("/login*").permitAll()
-////                .antMatchers("/permissions*").hasAnyAuthority("all")
-////                .antMatchers("/roles*").hasAnyAuthority("all")
-////                .antMatchers("/users*").hasAnyAuthority("all")
-////                .antMatchers("/hospitalized*").hasAnyAuthority("all")
-////                .antMatchers("/recovered*").hasAnyAuthority("all")
-////                .antMatchers("/isolated*").hasAnyAuthority("all")
-////                .antMatchers("/covidbyarea*").hasAnyAuthority("all")
-////                .antMatchers("/updatedata*").hasAnyAuthority("all")
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().permitAll()
-//                .and()
-//                .logout().invalidateHttpSession(true)
-//                .clearAuthentication(true)
-//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//                .permitAll();
-//
-////        http.oauth2ResourceServer()
-////                .jwt().jwtAuthenticationConverter(authenticationConverter());
-//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
-                .authorizeRequests().anyRequest().authenticated();
+                .authorizeRequests()
+                .antMatchers("/registration/**")
+                .permitAll()
+                .anyRequest()
+                .authenticated().and()
+                .formLogin();
     }
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//
+//        http
+//                .csrf().disable()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+//                .authorizeRequests().anyRequest().authenticated();
+//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

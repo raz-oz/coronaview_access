@@ -5,6 +5,7 @@ import com.rad.ms.corona_view.access.ErrorHandling.PermissionException;
 import com.rad.ms.corona_view.access.ErrorHandling.UserNotFoundException;
 //import com.rad.ms.corona_view.access.Security.UserService;
 import com.rad.ms.corona_view.access.Service.IUserAccessService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
