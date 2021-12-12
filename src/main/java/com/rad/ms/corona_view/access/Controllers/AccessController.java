@@ -25,54 +25,49 @@ public class AccessController {
     @Autowired
     private IRegistrationService registrationService;
 
-//    @RequestMapping(value="/")
-//    public String goHome(Principal user){
-//        if (user!=null)
-//            return ("Hello " + user.getName());
-//        else
-//            return "Hello guest";
-//    }
+    @RequestMapping(value="/")
+    public String goHome(Principal user){
+        if (user!=null)
+            return ("Hello " + user.getName());
+        else
+            return "Hello guest";
+    }
 
-    // default login
-//    @RequestMapping(value = "/login")
-//    public String Login(){
-//        return "/login";
-//    }
-//
-//    @RequestMapping(value = "/login/token={token}")
-//    public String tokenLogin(@PathVariable String token){
-//        return "/login";
-//    }
-//
-//    @RequestMapping(value = "/login/username={username}")
-//    public String usernameLogin(@PathVariable String username){
-//        return "/login";
-//    }
-//
-//    @RequestMapping(value = "/login/OAthe2")
-//    public String OAthe2Login(){
-//        return "/login";
-//    }
-//
-//    @RequestMapping(value = "/logout")
-//    public String Logout(){
-//        return "/logout";
-//    }
+//     default login
+    @RequestMapping(value = "/login")
+    public String Login(){
+        return "/login";
+    }
+
+    @RequestMapping(value = "/login/token={token}")
+    public String tokenLogin(@PathVariable String token){
+        return "/login";
+    }
+
+    @RequestMapping(value = "/login/username={username}")
+    public String usernameLogin(@PathVariable String username){
+        return "/login";
+    }
+
+    @RequestMapping(value = "/login/OAthe2")
+    public String OAthe2Login(){
+        return "/login";
+    }
+
+    @RequestMapping(value = "/logout")
+    public String Logout(){
+        return "/logout";
+    }
 
     @PostMapping(value = "/registration")
     public String register(@RequestBody RegistrationRequest request) {
         return registrationService.register(request);
     }
 
-    @GetMapping(value = "/registration")
-    public String registerGet() {
-        return "hi";
-//        return registrationService.register(request);
-    }
 
-//    @GetMapping(path = "/registration/confirm")
-//    public String confirm(@RequestParam("token") String token) {
-//        return registrationService.confirmToken(token);
-//    }
+    @GetMapping(path = "/registration/confirm")
+    public String confirm(@RequestParam("token") String token) {
+        return registrationService.confirmToken(token);
+    }
 
 }

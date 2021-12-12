@@ -3,6 +3,7 @@ package com.rad.ms.corona_view.access.Repositories;
 import com.rad.ms.corona_view.access.Entities.Permission;
 import com.rad.ms.corona_view.access.Entities.Role;
 import com.rad.ms.corona_view.access.Entities.User;
+import com.rad.ms.corona_view.access.Registration.token.ConfirmationTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,6 +27,8 @@ public class LoadDatabase {
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ConfirmationTokenRepository confirmationTokenRepository;
 
     @Bean("initPermissionsData")
     InitializingBean initPermissionsData() {

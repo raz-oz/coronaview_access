@@ -1,11 +1,13 @@
 package com.rad.ms.corona_view.access.Entities;
 
 
+import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Document
+@AllArgsConstructor
 public class User {
     @Id
     private String username;
@@ -29,7 +31,7 @@ public class User {
         this.password=BC.encode(password);
         this.role= role;
         this.roleId= role.getId();
-        this.enabled = true;
+        this.enabled = false;
         this.accountNonExpired= true;
         this.credentialsNonExpired= true;
         this.accountNonLocked= true;
@@ -50,8 +52,6 @@ public class User {
     public void setRoleId(String roleId) {
         this.roleId= roleId;
     }
-
-
 
     public String getUsername() {
         return username;
