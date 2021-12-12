@@ -76,11 +76,11 @@ public class LoadDatabase {
     InitializingBean initUserData() {
         return () -> {
             log.info("Initializing predefined users.");
-            userRepository.save(new User("Raz","1234",roleRepository.findRoleById("1")));
-            userRepository.save(new User("Shahar","1234",roleRepository.findRoleById("1")));
-            userRepository.save(new User("Dan","1234",roleRepository.findRoleById("2")));
-            userRepository.save(new User("Moshe","1234",roleRepository.findRoleById("3")));
-            userRepository.save(new User("Test","1234",roleRepository.findRoleById("0")));
+            userRepository.save(new User("Raz","1234",roleRepository.findRoleById("1"),true));
+            userRepository.save(new User("Shahar","1234",roleRepository.findRoleById("1"),true));
+            userRepository.save(new User("Dan","1234",roleRepository.findRoleById("2"),true));
+            userRepository.save(new User("Moshe","1234",roleRepository.findRoleById("3"),true));
+            userRepository.save(new User("Test","1234",roleRepository.findRoleById("0"),true));
             log.info("Finished to initialize predefined users.");
         };
     }

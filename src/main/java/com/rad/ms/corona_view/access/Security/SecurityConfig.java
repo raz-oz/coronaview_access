@@ -45,20 +45,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return provider;
     }
 
-
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .formLogin().disable()
                 .authorizeRequests()
+                .antMatchers("/")
+                .permitAll()
                 .antMatchers("/registration/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated().and()
-                .formLogin();
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
+                .and()
+                .rememberMe().tokenValiditySeconds(2592000).key("mySecret!").rememberMeParameter("checkRememberMe");
+
+        http.httpBasic();
     }
+
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
 //

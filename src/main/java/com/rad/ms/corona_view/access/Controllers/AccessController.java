@@ -3,7 +3,7 @@ package com.rad.ms.corona_view.access.Controllers;
 import com.rad.ms.corona_view.access.Registration.IRegistrationService;
 import com.rad.ms.corona_view.access.Registration.RegistrationRequest;
 import com.rad.ms.corona_view.access.Registration.RegistrationService;
-import com.rad.ms.corona_view.access.Security.SecurityConfig;
+
 import com.rad.ms.corona_view.access.Security.UserDetailsConfig;
 //import com.rad.ms.corona_view.access.Security.UserService;
 
@@ -25,7 +25,8 @@ public class AccessController {
     @Autowired
     private IRegistrationService registrationService;
 
-    @RequestMapping(value="/")
+    @GetMapping(value="/")
+
     public String goHome(Principal user){
         if (user!=null)
             return ("Hello " + user.getName());
@@ -34,27 +35,27 @@ public class AccessController {
     }
 
 //     default login
-    @RequestMapping(value = "/login")
-    public String Login(){
-        return "/login";
-    }
+//    @GetMapping(value = "/login")
+//    public String Login(){
+//        return "login.html";
+//    }
 
-    @RequestMapping(value = "/login/token={token}")
+    @GetMapping(value = "/login/token={token}")
     public String tokenLogin(@PathVariable String token){
         return "/login";
     }
 
-    @RequestMapping(value = "/login/username={username}")
+    @GetMapping(value = "/login/username={username}")
     public String usernameLogin(@PathVariable String username){
         return "/login";
     }
 
-    @RequestMapping(value = "/login/OAthe2")
+    @GetMapping(value = "/login/OAthe2")
     public String OAthe2Login(){
         return "/login";
     }
 
-    @RequestMapping(value = "/logout")
+    @GetMapping(value = "/logout")
     public String Logout(){
         return "/logout";
     }
@@ -63,7 +64,6 @@ public class AccessController {
     public String register(@RequestBody RegistrationRequest request) {
         return registrationService.register(request);
     }
-
 
     @GetMapping(path = "/registration/confirm")
     public String confirm(@RequestParam("token") String token) {

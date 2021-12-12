@@ -62,6 +62,4 @@ public class RegistrationService implements IRegistrationService{
 
         return "confirmed";
     }
-
-
 }

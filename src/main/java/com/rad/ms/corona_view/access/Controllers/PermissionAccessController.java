@@ -33,12 +33,14 @@ public class PermissionAccessController {
     private IPermissionAccessService accessService;
 
     @GetMapping("/permissions")
+    @PreAuthorize("hasAuthority('all') || hasAuthority('role_read')")
     public List<Permission> getAllPermissions() {
             return accessService.getPermissions();
         }
 
 
     @GetMapping("/permissions/{id}")
+    @PreAuthorize("hasAuthority('all') || hasAuthority('role_read')")
     public Permission getPermission(@PathVariable(value = "id") String id) {
         return accessService.getPermission(id);
     }

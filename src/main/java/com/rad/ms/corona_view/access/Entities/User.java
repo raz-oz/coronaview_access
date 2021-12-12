@@ -36,6 +36,16 @@ public class User {
         this.credentialsNonExpired= true;
         this.accountNonLocked= true;
     }
+    public User(String username,String password,Role role,Boolean enabled) {
+        this.username=username;
+        this.password=BC.encode(password);
+        this.role= role;
+        this.roleId= role.getId();
+        this.enabled = enabled;
+        this.accountNonExpired= true;
+        this.credentialsNonExpired= true;
+        this.accountNonLocked= true;
+    }
 
     public Role getRole() {
         return role;
