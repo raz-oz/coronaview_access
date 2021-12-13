@@ -3,17 +3,20 @@ package com.rad.ms.corona_view.access.Service;
 import com.rad.ms.corona_view.access.ErrorHandling.InvalidInputException;
 import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.ErrorHandling.UserNotFoundException;
+import com.rad.ms.corona_view.access.Registration.token.ConfirmationToken;
 import com.rad.ms.corona_view.access.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
-public class UserUserAccessService implements IUserAccessService {
+public class UserAccessService implements IUserAccessService {
 
     @Autowired
     private UserRepository userRepository;
@@ -25,10 +28,25 @@ public class UserUserAccessService implements IUserAccessService {
         return userRepository.findAll();
     }
 
-    public User addUser(User user) {
-        if (user == null || user.getPassword() == null || user.getUsername() == null || user.getRoleId() == null)
+    public String addUser(String username, String password, String roleId) {
+        if (username == null || password == null || roleId == null)
             throw new InvalidInputException("Request has to include password, username and role id.");
-        if (validUsername(user.getUsername()) && validPassword(user.getPassword()) && roleAccessService.existsById(user.getRoleId())){
+        if (validUsername(username) && validPassword(password) && roleAccessService.existsById(roleId)){
+            // bcrypt the password
+            // create new User here
+            String token = UUID.randomUUID().toString();
+
+            ConfirmationToken confirmationToken = new ConfirmationToken(
+                    token,
+                    LocalDateTime.now(),
+                    LocalDateTime.now().plusMinutes(15),
+                    appUser
+            );
+
+            confirmationTokenService.saveConfirmationToken(
+                    confirmationToken);
+
+            return token;
             return userRepository.save(user);
         }
 

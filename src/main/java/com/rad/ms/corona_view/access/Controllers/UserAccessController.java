@@ -42,12 +42,12 @@ public class UserAccessController {
         limitAccesses(userId);
         return accessService.getUser(userId);
     }
-
-    @PostMapping
-    @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
-    public User addUser(@RequestBody User user){
-        return accessService.addUser(user);
-    }
+    /* OVERLAPS WITH REGISTER */
+//    @PostMapping
+//    @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
+//    public User addUser(@RequestBody User user){
+//        return accessService.addUser(user);
+//    }
 
     @PatchMapping("{user_id}")
     @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
