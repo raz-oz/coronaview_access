@@ -8,9 +8,9 @@ import java.security.Principal;
 
 @RestController
 public class AccessController {
+
     @Autowired
     private IRegistrationService registrationService;
-
 
     @GetMapping(value="/")
     public String goHome(Principal user){
@@ -18,32 +18,6 @@ public class AccessController {
             return ("Hello " + user.getName());
         else
             return "Hello guest";
-    }
-
-//     default login
-//    @GetMapping(value = "/login")
-//    public String Login(){
-//        return "login.html";
-//    }
-
-//    @GetMapping(value = "/login/token={token}")
-//    public String tokenLogin(@PathVariable String token){
-//        return "/login";
-//    }
-//
-//    @GetMapping(value = "/login/username={username}")
-//    public String usernameLogin(@PathVariable String username){
-//        return "/login";
-//    }
-//
-//    @GetMapping(value = "/login/OAthe2")
-//    public String OAthe2Login(){
-//        return "/login";
-//    }
-
-    @GetMapping(value = "/logout")
-    public String Logout(){
-        return "/logout";
     }
 
     @PostMapping(value = "/registration")

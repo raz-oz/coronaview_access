@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -49,14 +50,20 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                                             FilterChain chain, Authentication authentication) throws IOException {
         User user = (User) authentication.getPrincipal();
         JwtConfig jwtConfig = JwtConfig.getInstance();
+        String username = user.getUsername();
+        Date expiresAt = new Date(System.currentTimeMillis() + jwtConfig.getExpirationTime());
+        List permissions =  user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         String access_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + jwtConfig.getExpirationTime()))
+                .withSubject(username)
+                .withExpiresAt(expiresAt)
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("permissions", permissions)
                 .sign(jwtConfig.getAlgorithm());
         Map<String,String> tokens = new HashMap<>();
+        tokens.put("username", user.getUsername());
+        tokens.put("permissions", permissions.toString());
         tokens.put("access_token", access_token);
+        tokens.put("expires at", expiresAt.toString());
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }

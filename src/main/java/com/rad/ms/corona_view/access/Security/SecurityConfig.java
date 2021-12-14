@@ -28,14 +28,39 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //public static final String AUTHORITIES_CLAIM_NAME = "permission";
 
-    @Autowired
-    private UserDetailsService userDetailsService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .formLogin().disable()
+                .authorizeRequests()
+                .antMatchers("/", "/registration/**", "/login")
+                .permitAll()
+                .anyRequest()
+                .authenticated();
+        http.httpBasic();
+    }
+
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//
+//        http
+//                .csrf().disable()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers("/", "/registration/**", "/login")
+//                .permitAll()
+//                .and()
+//                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+//                .authorizeRequests().anyRequest().authenticated();
+//    }
 
     @Bean
     public AuthenticationProvider authProvider(UserDetailsService userDetailsService){
@@ -45,54 +70,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return provider;
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .formLogin().disable()
-//                .authorizeRequests()
-//                .antMatchers("/", "/registration/**", "/login")
-//                .permitAll()
-////                .antMatchers("/registration/**")
-////                .permitAll()
-//                .anyRequest()
-//                .authenticated().and()
-//                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
-//                .and()
-//                .rememberMe().tokenValiditySeconds(2592000).key("mySecret!").rememberMeParameter("checkRememberMe");
-//
-//        http.httpBasic();
-//    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-
-        http
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/", "/registration/**", "/login")
-                .permitAll()
-                .and()
-                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
-                .authorizeRequests().anyRequest().authenticated();
-    }
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(authProvider(userDetailsService));
-//    }
-
-//    protected JwtAuthenticationConverter authenticationConverter() {
-//        JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
-//        authoritiesConverter.setAuthorityPrefix("");
-//        authoritiesConverter.setAuthoritiesClaimName(AUTHORITIES_CLAIM_NAME);
-//
-//        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-//        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
-//        return converter;
-//    }
 
 }

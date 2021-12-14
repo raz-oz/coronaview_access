@@ -4,6 +4,8 @@ import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.ErrorHandling.PermissionException;
 import com.rad.ms.corona_view.access.ErrorHandling.UserNotFoundException;
 //import com.rad.ms.corona_view.access.Security.UserService;
+import com.rad.ms.corona_view.access.Registration.IRegistrationService;
+import com.rad.ms.corona_view.access.Registration.RegistrationRequest;
 import com.rad.ms.corona_view.access.Service.IUserAccessService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +32,9 @@ public class UserAccessController {
     @Autowired
     private IUserAccessService accessService;
 
+    @Autowired
+    private IRegistrationService registrationService;
+
 
     @GetMapping
     @PreAuthorize("hasAuthority('all') || hasAuthority('user_read')")
@@ -44,11 +49,11 @@ public class UserAccessController {
     }
 
     /* OVERLAPS WITH REGISTER */
-//    @PostMapping
-//    @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
-//    public User addUser(@RequestBody User user){
-//        return accessService.addUser(user);
-//    }
+    @PostMapping
+    @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
+    public String addUser(@RequestBody RegistrationRequest request){
+           return registrationService.register(request);
+    }
 
     @PatchMapping("{user_id}")
     @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
