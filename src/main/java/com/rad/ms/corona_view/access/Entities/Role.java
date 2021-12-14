@@ -17,8 +17,10 @@ public class Role {
         this.name = name;
         this.permissions = permissions;
     }
+
     public Role() {
     }
+
     @Override
     public String toString() {
         return "Role{" +

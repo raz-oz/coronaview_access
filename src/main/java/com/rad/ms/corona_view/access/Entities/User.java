@@ -1,34 +1,94 @@
 package com.rad.ms.corona_view.access.Entities;
 
+
+import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Document
-public class User  {
+@AllArgsConstructor
+public class User implements UserDetails {
     @Id
     private String username;
     private String password;
     private String email;
     private String cellphoneNumber;
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
     private boolean isEnabled;
+    private boolean isAccountNonExpired;
+    private boolean isCredentialsNonExpired;
+    private boolean isAccountNonLocked;
     private String roleId;
+    private Role role;
+
+    public User(){}
+    public User(String username,String password,Role role) {
+        this.username=username;
+        this.password=password;
+        this.role= role;
+        this.roleId= role.getId();
+        this.isEnabled = false;
+        this.isAccountNonExpired= true;
+        this.isCredentialsNonExpired = true;
+        this.isAccountNonLocked = true;
+    }
+    public User(String username,String password,Role role,boolean enabled) {
+        this.username=username;
+        this.password=password;
+        this.role= role;
+        this.roleId= role.getId();
+        this.isEnabled = enabled;
+        this.isAccountNonExpired= true;
+        this.isCredentialsNonExpired = true;
+        this.isAccountNonLocked = true;
+    }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Permission permission : role.getPermissions()) {
+            authorities.add(new SimpleGrantedAuthority(permission.getName()));
+        }
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    @Override
+    public boolean isAccountNonExpired() {
+        return isAccountNonExpired;
     }
 
-
-    public String getPassword() {
-        return password;
+    @Override
+    public boolean isAccountNonLocked() {
+        return isAccountNonLocked;
     }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isCredentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+    
 
     public void setPassword(String password) {
         this.password = password;
@@ -50,39 +110,20 @@ public class User  {
         this.cellphoneNumber = cellphoneNumber;
     }
 
-
-    public boolean isAccountNonExpired() {
-        return isAccountNonExpired;
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 
     public void setAccountNonExpired(boolean accountNonExpired) {
         isAccountNonExpired = accountNonExpired;
     }
 
-
-    public boolean isAccountNonLocked() {
-        return isAccountNonLocked;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        isAccountNonLocked = accountNonLocked;
-    }
-
-
-    public boolean isCredentialsNonExpired() {
-        return isCredentialsNonExpired;
-    }
-
     public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         isCredentialsNonExpired = credentialsNonExpired;
     }
 
-    public boolean isEnabled() {
-        return isEnabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
     }
 
     public String getRoleId() {
@@ -91,5 +132,13 @@ public class User  {
 
     public void setRoleId(String roleId) {
         this.roleId = roleId;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

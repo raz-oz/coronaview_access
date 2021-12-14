@@ -3,6 +3,7 @@ package com.rad.ms.corona_view.access.Repositories;
 import com.rad.ms.corona_view.access.Entities.Permission;
 import com.rad.ms.corona_view.access.Entities.Role;
 import com.rad.ms.corona_view.access.Entities.User;
+import com.rad.ms.corona_view.access.Registration.token.ConfirmationTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class LoadDatabase {
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Bean("initPermissionsData")
     InitializingBean initPermissionsData() {
@@ -58,7 +62,6 @@ public class LoadDatabase {
             Role admin = new Role("1", "Admin", List.of(all));
             Role operator = new Role("2", "Operator", List.of(data_read, user_read, role_read));
             Role monitor = new Role("3", "Monitor ", List.of(data_read));
-            //
             Role blaa = new Role("0", "Blaa", List.of(user_read,data_write));
 
             for (Role role : List.of(admin, operator, monitor, blaa)) {
@@ -74,16 +77,12 @@ public class LoadDatabase {
     InitializingBean initUserData() {
         return () -> {
             log.info("Initializing predefined users.");
-          User raz = new User(); raz.setUsername("raz"); raz.setRoleId("1");
-          User shahar = new User(); shahar.setUsername("shahar"); shahar.setRoleId("1");
-          User dan = new User(); dan.setUsername("dan"); dan.setRoleId("2");
-          User moshe = new User(); moshe.setUsername("moshe"); moshe.setRoleId("3");
-          User test = new User(); test.setUsername("Test"); moshe.setRoleId("0");
-          for (User user: List.of(raz,shahar,dan,moshe,test)){
-              if (!userRepository.existsById(user.getUsername())){
-                  userRepository.save(user);
-              }
-          }
+            String password = passwordEncoder.encode("1234");
+            userRepository.save(new User("Raz",password,roleRepository.findRoleById("1"),true));
+            userRepository.save(new User("Shahar",password,roleRepository.findRoleById("1"),true));
+            userRepository.save(new User("Dan",password,roleRepository.findRoleById("2"),true));
+            userRepository.save(new User("Moshe",password,roleRepository.findRoleById("3"),true));
+            userRepository.save(new User("Test",password,roleRepository.findRoleById("0"),true));
             log.info("Finished to initialize predefined users.");
         };
     }
