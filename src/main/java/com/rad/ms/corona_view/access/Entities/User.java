@@ -15,16 +15,15 @@ import java.util.List;
 @Document
 @AllArgsConstructor
 public class User implements UserDetails {
-
     @Id
     private String username;
     private String password;
     private String email;
     private String cellphoneNumber;
-    private boolean enabled;
-    private boolean accountNonExpired;
-    private boolean credentialsNonExpired;
-    private boolean accountNonLocked;
+    private boolean isEnabled;
+    private boolean isAccountNonExpired;
+    private boolean isCredentialsNonExpired;
+    private boolean isAccountNonLocked;
     private String roleId;
     private Role role;
 
@@ -34,74 +33,62 @@ public class User implements UserDetails {
         this.password=password;
         this.role= role;
         this.roleId= role.getId();
-        this.enabled = false;
-        this.accountNonExpired= true;
-        this.credentialsNonExpired= true;
-        this.accountNonLocked= true;
+        this.isEnabled = false;
+        this.isAccountNonExpired= true;
+        this.isCredentialsNonExpired = true;
+        this.isAccountNonLocked = true;
     }
     public User(String username,String password,Role role,boolean enabled) {
         this.username=username;
         this.password=password;
         this.role= role;
         this.roleId= role.getId();
-        this.enabled = enabled;
-        this.accountNonExpired= true;
-        this.credentialsNonExpired= true;
-        this.accountNonLocked= true;
+        this.isEnabled = enabled;
+        this.isAccountNonExpired= true;
+        this.isCredentialsNonExpired = true;
+        this.isAccountNonLocked = true;
     }
 
-    public Role getRole() {
-        return role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Permission permission : role.getPermissions()) {
+            authorities.add(new SimpleGrantedAuthority(permission.getName()));
+        }
+        return authorities;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    @Override
+    public String getPassword() {
+        return password;
     }
 
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId= roleId;
-    }
-
+    @Override
     public String getUsername() {
         return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return accountNonExpired;
+        return isAccountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return accountNonLocked;
+        return isAccountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+        return isCredentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return isEnabled;
     }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Permission permission : getRole().getPermissions()) {
-            authorities.add(new SimpleGrantedAuthority(permission.getName()));
-        }
-        return authorities;
-    }
-
-    public String getPassword() {
-        return password;
-    }
+    
 
     public void setPassword(String password) {
         this.password = password;
@@ -124,34 +111,34 @@ public class User implements UserDetails {
     }
 
     public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+        isEnabled = enabled;
     }
 
     public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
+        isAccountNonExpired = accountNonExpired;
     }
 
     public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
+        isCredentialsNonExpired = credentialsNonExpired;
     }
 
     public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
+        isAccountNonLocked = accountNonLocked;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", cellphoneNumber='" + cellphoneNumber + '\'' +
-                ", enabled=" + enabled +
-                ", accountNonExpired=" + accountNonExpired +
-                ", credentialsNonExpired=" + credentialsNonExpired +
-                ", accountNonLocked=" + accountNonLocked +
-                ", roleId='" + roleId + '\'' +
-                ", role=" + role +
-                '}';
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
