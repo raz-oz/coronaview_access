@@ -28,7 +28,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String AUTHORITIES_CLAIM_NAME = "permission";
+    //public static final String AUTHORITIES_CLAIM_NAME = "permission";
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -45,50 +45,54 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return provider;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .formLogin().disable()
-                .authorizeRequests()
-                .antMatchers("/")
-                .permitAll()
-                .antMatchers("/registration/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated().and()
-                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
-                .and()
-                .rememberMe().tokenValiditySeconds(2592000).key("mySecret!").rememberMeParameter("checkRememberMe");
-
-        http.httpBasic();
-    }
-
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
-//
 //        http
 //                .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .formLogin().disable()
+//                .authorizeRequests()
+//                .antMatchers("/", "/registration/**", "/login")
+//                .permitAll()
+////                .antMatchers("/registration/**")
+////                .permitAll()
+//                .anyRequest()
+//                .authenticated().and()
+//                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
 //                .and()
-//                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
-//                .authorizeRequests().anyRequest().authenticated();
+//                .rememberMe().tokenValiditySeconds(2592000).key("mySecret!").rememberMeParameter("checkRememberMe");
+//
+//        http.httpBasic();
 //    }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authProvider(userDetailsService));
+    protected void configure(HttpSecurity http) throws Exception {
+
+        http
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/", "/registration/**", "/login")
+                .permitAll()
+                .and()
+                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+                .authorizeRequests().anyRequest().authenticated();
     }
 
-    protected JwtAuthenticationConverter authenticationConverter() {
-        JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        authoritiesConverter.setAuthorityPrefix("");
-        authoritiesConverter.setAuthoritiesClaimName(AUTHORITIES_CLAIM_NAME);
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.authenticationProvider(authProvider(userDetailsService));
+//    }
 
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
-        return converter;
-    }
+//    protected JwtAuthenticationConverter authenticationConverter() {
+//        JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+//        authoritiesConverter.setAuthorityPrefix("");
+//        authoritiesConverter.setAuthoritiesClaimName(AUTHORITIES_CLAIM_NAME);
+//
+//        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+//        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+//        return converter;
+//    }
 
 }
