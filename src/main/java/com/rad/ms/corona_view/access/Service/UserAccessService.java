@@ -1,26 +1,31 @@
 package com.rad.ms.corona_view.access.Service;
 
+import com.rad.ms.corona_view.access.Entities.Role;
 import com.rad.ms.corona_view.access.ErrorHandling.InvalidInputException;
 import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.ErrorHandling.UserNotFoundException;
-import com.rad.ms.corona_view.access.Registration.token.ConfirmationToken;
+import com.rad.ms.corona_view.access.Registration.token.ConfirmationTokenService;
 import com.rad.ms.corona_view.access.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 
 @Service
-public class UserAccessService implements IUserAccessService {
+public class UserAccessService implements IUserAccessService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    ConfirmationTokenService confirmationTokenService;
     @Autowired
     private IRoleAccessService roleAccessService;
 
@@ -32,22 +37,10 @@ public class UserAccessService implements IUserAccessService {
         if (username == null || password == null || roleId == null)
             throw new InvalidInputException("Request has to include password, username and role id.");
         if (validUsername(username) && validPassword(password) && roleAccessService.existsById(roleId)){
-            // bcrypt the password
-            // create new User here
-            String token = UUID.randomUUID().toString();
-
-            ConfirmationToken confirmationToken = new ConfirmationToken(
-                    token,
-                    LocalDateTime.now(),
-                    LocalDateTime.now().plusMinutes(15),
-                    appUser
-            );
-
-            confirmationTokenService.saveConfirmationToken(
-                    confirmationToken);
-
-            return token;
-            return userRepository.save(user);
+            Role role = roleAccessService.getRole(roleId);
+            User user = new User(username, passwordEncoder.encode(password), role);
+            userRepository.save(user);
+            return confirmationTokenService.createToken(user);
         }
 
         throw new InvalidInputException("A new user must include valid username, password and role id.");
@@ -58,6 +51,10 @@ public class UserAccessService implements IUserAccessService {
     }
 
     public User updateUser(String userId, User user) {
+        if (userId == null || user == null){
+            throw new InvalidInputException("invalid username or user");
+        }
+
         if (!userId.equals(user.getUsername())){
             throw new InvalidInputException("Can not update the user username");
         }
@@ -79,21 +76,18 @@ public class UserAccessService implements IUserAccessService {
 
     private void updateNotNullFields(User user_to_update, User updated_user) {
         if (updated_user.getPassword() != null && validPassword((updated_user.getPassword())))
-            user_to_update.setPassword(updated_user.getPassword());
+            user_to_update.setPassword(passwordEncoder.encode(updated_user.getPassword()));
         if (updated_user.getEmail() != null)
             user_to_update.setEmail(updated_user.getEmail());
         if (updated_user.getCellphoneNumber() != null)
             user_to_update.setCellphoneNumber(updated_user.getCellphoneNumber());
-        if (updated_user.getAccountNonExpired() != null)
-            user_to_update.setAccountNonExpired(updated_user.getAccountNonExpired());
-        if (updated_user.getAccountNonLocked() != null)
-            user_to_update.setAccountNonLocked(updated_user.getAccountNonLocked());
-        if (updated_user.getCredentialsNonExpired() != null)
-            user_to_update.setCredentialsNonExpired(updated_user.getCredentialsNonExpired());
-        if (updated_user.getEnabled() != null)
-            user_to_update.setEnabled(updated_user.getEnabled());
+        user_to_update.setAccountNonExpired(updated_user.isAccountNonExpired());
+        user_to_update.setAccountNonLocked(updated_user.isAccountNonLocked());
+        user_to_update.setCredentialsNonExpired(updated_user.isCredentialsNonExpired());
+        user_to_update.setEnabled(updated_user.isEnabled());
         if (updated_user.getRoleId() != null && roleAccessService.existsById(updated_user.getRoleId())){
             user_to_update.setRoleId(updated_user.getRoleId());
+            user_to_update.setRole(roleAccessService.getRole(updated_user.getRoleId()));
         }
     }
 
@@ -138,5 +132,13 @@ public class UserAccessService implements IUserAccessService {
             valid = !userRepository.existsById(username); // if user exist, then username is not valid.
         }
         return valid;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        User CurrUser = userRepository.getUserByUsername(s);
+        if(CurrUser==null)
+            throw new UsernameNotFoundException(s);
+        return CurrUser;
     }
 }

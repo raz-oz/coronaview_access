@@ -2,25 +2,11 @@ package com.rad.ms.corona_view.access.Controllers;
 
 import com.rad.ms.corona_view.access.Registration.IRegistrationService;
 import com.rad.ms.corona_view.access.Registration.RegistrationRequest;
-import com.rad.ms.corona_view.access.Registration.RegistrationService;
-
-import com.rad.ms.corona_view.access.Security.UserDetailsConfig;
-//import com.rad.ms.corona_view.access.Security.UserService;
-
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 
 @RestController
-//@AllArgsConstructor
 public class AccessController {
     @Autowired
     private IRegistrationService registrationService;

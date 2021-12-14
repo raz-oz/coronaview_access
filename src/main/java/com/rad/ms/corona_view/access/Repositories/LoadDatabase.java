@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class LoadDatabase {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private ConfirmationTokenRepository confirmationTokenRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Bean("initPermissionsData")
     InitializingBean initPermissionsData() {
@@ -76,11 +77,12 @@ public class LoadDatabase {
     InitializingBean initUserData() {
         return () -> {
             log.info("Initializing predefined users.");
-            userRepository.save(new User("Raz","1234",roleRepository.findRoleById("1"),true));
-            userRepository.save(new User("Shahar","1234",roleRepository.findRoleById("1"),true));
-            userRepository.save(new User("Dan","1234",roleRepository.findRoleById("2"),true));
-            userRepository.save(new User("Moshe","1234",roleRepository.findRoleById("3"),true));
-            userRepository.save(new User("Test","1234",roleRepository.findRoleById("0"),true));
+            String password = passwordEncoder.encode("1234");
+            userRepository.save(new User("Raz",password,roleRepository.findRoleById("1"),true));
+            userRepository.save(new User("Shahar",password,roleRepository.findRoleById("1"),true));
+            userRepository.save(new User("Dan",password,roleRepository.findRoleById("2"),true));
+            userRepository.save(new User("Moshe",password,roleRepository.findRoleById("3"),true));
+            userRepository.save(new User("Test",password,roleRepository.findRoleById("0"),true));
             log.info("Finished to initialize predefined users.");
         };
     }

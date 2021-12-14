@@ -4,31 +4,33 @@ package com.rad.ms.corona_view.access.Entities;
 import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Document
 @AllArgsConstructor
-public class User {
+public class User implements UserDetails {
     @Id
     private String username;
     private String password;
     private String email;
     private String cellphoneNumber;
-    private Boolean enabled;
-    private Boolean accountNonExpired;
-    private Boolean credentialsNonExpired;
-    private Boolean accountNonLocked;
+    private boolean enabled;
+    private boolean accountNonExpired;
+    private boolean credentialsNonExpired;
+    private boolean accountNonLocked;
     private String roleId;
     private Role role;
 
-    public static final BCryptPasswordEncoder BC = new BCryptPasswordEncoder();
-
-    public User() {
-    }
 
     public User(String username,String password,Role role) {
         this.username=username;
-        this.password=BC.encode(password);
+        this.password=password;
         this.role= role;
         this.roleId= role.getId();
         this.enabled = false;
@@ -36,9 +38,9 @@ public class User {
         this.credentialsNonExpired= true;
         this.accountNonLocked= true;
     }
-    public User(String username,String password,Role role,Boolean enabled) {
+    public User(String username,String password,Role role,boolean enabled) {
         this.username=username;
-        this.password=BC.encode(password);
+        this.password=password;
         this.role= role;
         this.roleId= role.getId();
         this.enabled = enabled;
@@ -67,9 +69,33 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
 
-        this.username = username;
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Permission permission : getRole().getPermissions()) {
+            authorities.add(new SimpleGrantedAuthority(permission.getName()));
+        }
+        return authorities;
     }
 
     public String getPassword() {
@@ -77,8 +103,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-
-        this.password = BC.encode(password);
+        this.password = password;
     }
 
     public String getEmail() {
@@ -97,35 +122,19 @@ public class User {
         this.cellphoneNumber = cellphoneNumber;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    public Boolean getAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    public void setAccountNonExpired(Boolean accountNonExpired) {
+    public void setAccountNonExpired(boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public Boolean getCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public Boolean getAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public void setAccountNonLocked(Boolean accountNonLocked) {
+    public void setAccountNonLocked(boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
     }
 
@@ -140,7 +149,8 @@ public class User {
                 ", accountNonExpired=" + accountNonExpired +
                 ", credentialsNonExpired=" + credentialsNonExpired +
                 ", accountNonLocked=" + accountNonLocked +
-                ", roleId=" + roleId.toString() +
+                ", roleId='" + roleId + '\'' +
+                ", role=" + role +
                 '}';
     }
 }

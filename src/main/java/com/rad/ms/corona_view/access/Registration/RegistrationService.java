@@ -4,9 +4,6 @@ package com.rad.ms.corona_view.access.Registration;
 import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.Registration.token.ConfirmationToken;
 import com.rad.ms.corona_view.access.Registration.token.ConfirmationTokenService;
-import com.rad.ms.corona_view.access.Repositories.RoleRepository;
-import com.rad.ms.corona_view.access.Repositories.UserRepository;
-import com.rad.ms.corona_view.access.Security.AccessUserDetailsService;
 import com.rad.ms.corona_view.access.Service.UserAccessService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,27 +16,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RegistrationService implements IRegistrationService{
     private static final String ROLE_MONITOR = "3";
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private UserRepository userRepository;
 
-    private AccessUserDetailsService accessUserDetailsService;
+    @Autowired
     private UserAccessService userAccessService;
+    @Autowired
     private ConfirmationTokenService confirmationTokenService;
 
 
     public String register(RegistrationRequest request) {
         String token = userAccessService.addUser(request.getUsername(), request.getPassword(), ROLE_MONITOR);
-//        String token = accessUserDetailsService.signUpUser(
-//                new User(
-//                        request.getUsername(),
-//                        request.getPassword(),
-//                        roleRepository.findRoleById("3")
-//                )
-//        );
-
-
         return "http://localhost:8403/registration/confirm?token=" + token;
     }
 
@@ -59,8 +44,10 @@ public class RegistrationService implements IRegistrationService{
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("token expired");
         }
-        confirmationToken.getAppUser().setEnabled(true);
-        userRepository.save(confirmationToken.getAppUser());
+
+        User user = confirmationToken.getAppUser();
+        user.setEnabled(true);
+        userAccessService.updateUser(user.getUsername(), user);
         confirmationTokenService.setConfirmedAt(token);
 
         return "confirmed";

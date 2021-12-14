@@ -42,6 +42,7 @@ public class UserAccessController {
         limitAccesses(userId);
         return accessService.getUser(userId);
     }
+
     /* OVERLAPS WITH REGISTER */
 //    @PostMapping
 //    @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
