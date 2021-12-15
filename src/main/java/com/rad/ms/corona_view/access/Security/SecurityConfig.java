@@ -33,34 +33,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
 
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .formLogin().disable()
-                .authorizeRequests()
-                .antMatchers("/", "/registration/**", "/login")
-                .permitAll()
-                .anyRequest()
-                .authenticated();
-        http.httpBasic();
-    }
-
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
-//
 //        http
 //                .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
+//                .formLogin().disable()
 //                .authorizeRequests()
 //                .antMatchers("/", "/registration/**", "/login")
 //                .permitAll()
-//                .and()
-//                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
-//                .authorizeRequests().anyRequest().authenticated();
+//                .anyRequest()
+//                .authenticated();
+//        http.httpBasic();
 //    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        http
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/", "/registration/**", "/login")
+                .permitAll()
+                .and()
+                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+                .authorizeRequests().anyRequest().authenticated();
+    }
 
     @Bean
     public AuthenticationProvider authProvider(UserDetailsService userDetailsService){
