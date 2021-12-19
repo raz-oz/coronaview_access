@@ -64,7 +64,7 @@ public class SecurityConfig{
                     .antMatchers("/", "/registration/**", "/login")
                     .permitAll()
                     .and()
-                    .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                    .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                     .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
                     .authorizeRequests().anyRequest().authenticated();
             http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
