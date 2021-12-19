@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,41 +27,49 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig{
 
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .formLogin().disable()
-                .authorizeRequests()
-                .antMatchers("/", "/registration/**", "/login")
-                .permitAll()
-                .anyRequest()
-                .authenticated();
-        http.httpBasic();
+    @Configuration
+    @Order(1)
+    public static class BasicWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .csrf().disable()
+                    .formLogin().disable()
+                    .authorizeRequests()
+                    .antMatchers("/", "/registration/**", "/login")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated();
+            http.httpBasic();
+        }
     }
+    @Configuration
+    @Order(2)
+    public static class JwtWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//
-//        http
-//                .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers("/", "/registration/**", "/login")
-//                .permitAll()
-//                .and()
-//                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
-//                .authorizeRequests().anyRequest().authenticated();
-//    }
+
+        protected void configure(HttpSecurity http) throws Exception {
+
+            http
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests()
+                    .antMatchers("/", "/registration/**", "/login")
+                    .permitAll()
+                    .and()
+                    .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                    .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+                    .authorizeRequests().anyRequest().authenticated();
+            http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        }
+    }
 
     @Bean
     public AuthenticationProvider authProvider(UserDetailsService userDetailsService){
