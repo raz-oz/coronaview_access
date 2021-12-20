@@ -9,18 +9,18 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Configuration
@@ -34,23 +34,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         OAUTH2
     }
 
+    private interface ConfigureHandler {
+        void configure(HttpSecurity http) throws Exception;
+    }
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private Map<Integer, ConfigureHandler> configureHandlerMap;
+
     public SecurityConfig(){
-
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception{
-
-    }
-
-
-    @Configuration
-    @Order(3)
-    public static class BasicWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
-        protected void configure(HttpSecurity http) throws Exception {
+        configureHandlerMap = new HashMap<>();
+        // Basic Security Config
+        configureHandlerMap.put(securityType.BASIC.ordinal(), (http -> {
             http
                     .csrf().disable()
                     .formLogin().disable()
@@ -60,15 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                     .anyRequest()
                     .authenticated();
             http.httpBasic();
-        }
-    }
-    @Configuration
-    @Order(2)
-    public static class JwtWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+        }));
 
-
-        protected void configure(HttpSecurity http) throws Exception {
-
+        // Bearer Security Config
+        configureHandlerMap.put(securityType.BEARER.ordinal(), (http -> {
             http
                     .csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -80,30 +71,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                     .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                     .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
                     .authorizeRequests().anyRequest().authenticated();
-            http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-        }
+        }));
+
+        // OAuth2 Security Config
+        configureHandlerMap.put(securityType.BEARER.ordinal(), (http -> {
+            http
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests()
+                    .antMatchers("/", "/registration/**", "/login")
+                    .permitAll()
+                    .and()
+                    .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                    .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+                    .authorizeRequests().anyRequest().authenticated();
+        }));
+
     }
 
-    @Configuration
-    @Order(1)
-    public static class OAuth2ConfigurationAdapter extends WebSecurityConfigurerAdapter {
-
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            // @formatter:off
-            http
-                    .authorizeRequests(a -> a
-                            .antMatchers("/", "/error", "/webjars/**", "/login/oauth2", "/logout").permitAll()
-                            .anyRequest().authenticated()
-                    )
-                    .exceptionHandling(e -> e
-                            .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                    )
-                    .oauth2Login();
-            // @formatter:on
-        }
-
+    @Override
+    protected void configure(HttpSecurity http) throws Exception{
+        ConfigureHandler configureHandler = configureHandlerMap.get(securityType.OAUTH2.ordinal());
+        configureHandler.configure(http);
     }
 
     @Bean
@@ -115,4 +105,62 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     }
 
 
+
+//    @Configuration
+//    @Order(3)
+//    public static class BasicWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+//        protected void configure(HttpSecurity http) throws Exception {
+//            http
+//                    .csrf().disable()
+//                    .formLogin().disable()
+//                    .authorizeRequests()
+//                    .antMatchers("/", "/registration/**", "/login")
+//                    .permitAll()
+//                    .anyRequest()
+//                    .authenticated();
+//            http.httpBasic();
+//        }
+//    }
+//    @Configuration
+//    @Order(2)
+//    public static class JwtWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+//
+//
+//        protected void configure(HttpSecurity http) throws Exception {
+//
+//            http
+//                    .csrf().disable()
+//                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                    .and()
+//                    .authorizeRequests()
+//                    .antMatchers("/", "/registration/**", "/login")
+//                    .permitAll()
+//                    .and()
+//                    .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                    .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+//                    .authorizeRequests().anyRequest().authenticated();
+//        }
+//    }
+//
+//    @Configuration
+//    @Order(1)
+//    public static class OAuth2ConfigurationAdapter extends WebSecurityConfigurerAdapter {
+//
+//
+//        @Override
+//        protected void configure(HttpSecurity http) throws Exception {
+//            // @formatter:off
+//            http
+//                    .authorizeRequests(a -> a
+//                            .antMatchers("/", "/error", "/webjars/**", "/login/oauth2", "/logout").permitAll()
+//                            .anyRequest().authenticated()
+//                    )
+//                    .exceptionHandling(e -> e
+//                            .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+//                    )
+//                    .oauth2Login();
+//            // @formatter:on
+//        }
+//
+//    }
 }
