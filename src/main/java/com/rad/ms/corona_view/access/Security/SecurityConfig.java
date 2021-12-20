@@ -26,13 +26,12 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Configuration
-    @Order(1)
     public static class ConfigurationAdapter extends WebSecurityConfigurerAdapter {
 
         private interface ConfigureHandler {
