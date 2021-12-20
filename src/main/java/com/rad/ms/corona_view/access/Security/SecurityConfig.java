@@ -35,6 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         OAUTH2
     }
 
+    private static final int security_config_method = securityType.BEARER.ordinal();
+
     private Map<Integer, ConfigureHandler> configureHandlerMap  = Map.of(
             securityType.BASIC.ordinal(), (http -> {
                 http
@@ -76,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        configureHandlerMap.get(securityType.BEARER.ordinal()).myConfigure(http);
+        configureHandlerMap.get(security_config_method).myConfigure(http);
     }
 
     @Bean
