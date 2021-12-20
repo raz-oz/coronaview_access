@@ -26,14 +26,14 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Configuration
-    @Order(1)
     public static class ConfigurationAdapter extends WebSecurityConfigurerAdapter {
+
 
         private interface ConfigureHandler {
             void myConfigure(HttpSecurity http) throws Exception;
@@ -89,6 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             configureHandlerMap.get(securityType.OAUTH2.ordinal()).myConfigure(http);
         }
     }
+
 
     @Bean
     public AuthenticationProvider authProvider(UserDetailsService userDetailsService){

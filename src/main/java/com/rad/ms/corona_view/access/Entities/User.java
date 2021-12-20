@@ -53,8 +53,10 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Permission permission : role.getPermissions()) {
-            authorities.add(new SimpleGrantedAuthority(permission.getName()));
+        if (role != null) {
+            for (Permission permission : role.getPermissions()) {
+                authorities.add(new SimpleGrantedAuthority(permission.getName()));
+            }
         }
         return authorities;
     }
@@ -140,5 +142,20 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", cellphoneNumber='" + cellphoneNumber + '\'' +
+                ", isEnabled=" + isEnabled +
+                ", isAccountNonExpired=" + isAccountNonExpired +
+                ", isCredentialsNonExpired=" + isCredentialsNonExpired +
+                ", isAccountNonLocked=" + isAccountNonLocked +
+                ", role=" + role +
+                '}';
     }
 }
