@@ -34,6 +34,7 @@ public class SecurityConfig {
     @Configuration
     public static class ConfigurationAdapter extends WebSecurityConfigurerAdapter {
 
+
         private interface ConfigureHandler {
             void myConfigure(HttpSecurity http) throws Exception;
         }
@@ -88,6 +89,7 @@ public class SecurityConfig {
             configureHandlerMap.get(securityType.OAUTH2.ordinal()).myConfigure(http);
         }
     }
+
 
     @Bean
     public AuthenticationProvider authProvider(UserDetailsService userDetailsService){
