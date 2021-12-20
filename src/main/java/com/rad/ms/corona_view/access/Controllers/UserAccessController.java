@@ -68,6 +68,8 @@ public class UserAccessController {
     }
 
 
+
+
     public void limitAccesses(String id){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> Permissions =  auth.getAuthorities();

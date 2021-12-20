@@ -28,22 +28,28 @@ public class UserAccessService implements IUserAccessService, UserDetailsService
     ConfirmationTokenService confirmationTokenService;
     @Autowired
     private IRoleAccessService roleAccessService;
+    private String ErrorMessage = "";
+
+    public void logger(String s){
+        ErrorMessage= ErrorMessage+" "+s;
+    }
 
     public List<User> getUsers() {
         return userRepository.findAll();
     }
-
     public String addUser(String username, String password, String roleId) {
         if (username == null || password == null || roleId == null)
-            throw new InvalidInputException("Request has to include password, username and role id.");
+            throw new InvalidInputException("invalid username or password");
         if (validUsername(username) && validPassword(password) && roleAccessService.existsById(roleId)){
             Role role = roleAccessService.getRole(roleId);
             User user = new User(username, passwordEncoder.encode(password), role);
             userRepository.save(user);
             return confirmationTokenService.createToken(user);
         }
+        String err = ErrorMessage;
+        ErrorMessage =" ";
+        throw new InvalidInputException(err);
 
-        throw new InvalidInputException("A new user must include valid username, password and role id.");
     }
 
     public User getUser(String userId) {
@@ -112,6 +118,14 @@ public class UserAccessService implements IUserAccessService, UserDetailsService
                     hasSpecialSymbol = true;
                 hasAll = hasNumeric & hasLowerCase & hasUpperCase & hasSpecialSymbol;
             }
+            if(hasNumeric)
+                logger("password must contain at lest one Number .\n");
+            if(hasLowerCase)
+                logger("password must contain at lest one LowerCase letter .\n");
+            if(hasUpperCase)
+                logger("password must contain at lest one UpperCase letter . .\n");
+            if(hasSpecialSymbol)
+                logger("password must contain a at lest one SpecialSymbol .\n");
             valid = hasAll;
         }
         return valid;
@@ -130,6 +144,7 @@ public class UserAccessService implements IUserAccessService, UserDetailsService
             valid = false;
         else {
             valid = !userRepository.existsById(username); // if user exist, then username is not valid.
+            logger("username is taken .\n");
         }
         return valid;
     }
@@ -141,4 +156,5 @@ public class UserAccessService implements IUserAccessService, UserDetailsService
             throw new UsernameNotFoundException(s);
         return CurrUser;
     }
+
 }
