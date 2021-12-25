@@ -1,10 +1,6 @@
 package com.rad.ms.corona_view.access.Registration;
 
 
-import com.netflix.discovery.EurekaClient;
-import com.netflix.discovery.EurekaClientConfig;
-import com.netflix.discovery.shared.transport.jersey.EurekaJerseyClientImpl;
-import com.netflix.eureka.transport.EurekaServerHttpClients;
 import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.Registration.email.EmailSender;
 import com.rad.ms.corona_view.access.Registration.token.ConfirmationToken;
@@ -12,17 +8,11 @@ import com.rad.ms.corona_view.access.Registration.token.ConfirmationTokenService
 import com.rad.ms.corona_view.access.Service.UserAccessService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Properties;
+
 
 @Service
 @EnableAsync

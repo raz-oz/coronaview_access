@@ -1,7 +1,6 @@
 package com.rad.ms.corona_view.access.JWT;
 
 import com.auth0.jwt.algorithms.Algorithm;
-//import com.nimbusds.jose.Algorithm;
 
 public class JwtConfig {
     private final String secretKey;

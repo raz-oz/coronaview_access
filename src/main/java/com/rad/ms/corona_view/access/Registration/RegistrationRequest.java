@@ -1,6 +1,6 @@
 package com.rad.ms.corona_view.access.Registration;
 
-import com.rad.ms.corona_view.access.Entities.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

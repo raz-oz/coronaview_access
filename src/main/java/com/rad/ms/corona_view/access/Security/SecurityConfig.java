@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         OAUTH2
     }
 
-    private static final int security_config_method = securityType.BEARER.ordinal();
+    private static final int security_config_method = securityType.OAUTH2.ordinal();
 
     private Map<Integer, ConfigureHandler> configureHandlerMap  = Map.of(
             securityType.BASIC.ordinal(), (http -> {
@@ -57,7 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/registration","/home", "/registration/**", "/login")
                         .permitAll()
                         .and()
-                        // .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                         .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
                         .authorizeRequests().anyRequest().authenticated();
                 http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -65,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             securityType.OAUTH2.ordinal(), (http -> {
                 http
                         .authorizeRequests(a -> a
-                                .antMatchers("/home", "/error", "/webjars/**", "/login/**", "/login").permitAll()
+                                .antMatchers("/home", "/error", "/webjars/**", "/login/**").permitAll()
                                 .anyRequest().authenticated()
                         )
                         .exceptionHandling(e -> e

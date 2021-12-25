@@ -2,21 +2,15 @@ package com.rad.ms.corona_view.access.Controllers;
 
 import com.rad.ms.corona_view.access.Entities.User;
 import com.rad.ms.corona_view.access.ErrorHandling.PermissionException;
-import com.rad.ms.corona_view.access.ErrorHandling.UserNotFoundException;
-//import com.rad.ms.corona_view.access.Security.UserService;
 import com.rad.ms.corona_view.access.Registration.IRegistrationService;
 import com.rad.ms.corona_view.access.Registration.RegistrationRequest;
 import com.rad.ms.corona_view.access.Service.IUserAccessService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
