@@ -41,21 +41,16 @@ public class RegistrationService implements IRegistrationService{
 
 
     public String register(RegistrationRequest request) {
-        System.out.println("1");
         boolean isValidEmail = emailValidator.
                 test(request.getEmail());
-        System.out.println("2");
         if (!isValidEmail) {
             throw new IllegalStateException("email not valid");
         }
-        System.out.println("3");
         String token = userAccessService.addUser(request.getUsername(), request.getPassword(), ROLE_MONITOR);
         String link = "http://localhost:8403/registration/confirm?token=" + token;
-        System.out.println("4");
         emailSender.send(
                 request.getEmail(),
                 buildEmail(request.getUsername(), link));
-        System.out.println("5");
         return token;
     }
 
