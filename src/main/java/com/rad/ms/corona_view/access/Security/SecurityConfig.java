@@ -2,7 +2,6 @@ package com.rad.ms.corona_view.access.Security;
 
 import com.rad.ms.corona_view.access.JWT.CustomAuthenticationFilter;
 import com.rad.ms.corona_view.access.JWT.CustomAuthorizationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -43,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .csrf().disable()
                         .formLogin().disable()
                         .authorizeRequests()
-                        .antMatchers("/", "/registration/**", "/login")
+                        .antMatchers("/home", "/registration/**", "/login")
                         .permitAll()
                         .anyRequest()
                         .authenticated();
@@ -55,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                         .and()
                         .authorizeRequests()
-                        .antMatchers("/", "/registration/**", "/login")
+                        .antMatchers("/registration","/home", "/registration/**", "/login")
                         .permitAll()
                         .and()
                         // .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -66,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             securityType.OAUTH2.ordinal(), (http -> {
                 http
                         .authorizeRequests(a -> a
-                                .antMatchers("/", "/error", "/webjars/**", "/login/oauth2", "/logout").permitAll()
+                                .antMatchers("/home", "/error", "/webjars/**", "/login/**", "/login").permitAll()
                                 .anyRequest().authenticated()
                         )
                         .exceptionHandling(e -> e

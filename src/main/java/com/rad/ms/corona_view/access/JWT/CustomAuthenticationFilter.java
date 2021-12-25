@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +49,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain, Authentication authentication) throws IOException {
-        User user = (User) authentication.getPrincipal();
+        UserDetails user = (UserDetails) authentication.getPrincipal();
         JwtConfig jwtConfig = JwtConfig.getInstance();
         String username = user.getUsername();
         Date expiresAt = new Date(System.currentTimeMillis() + jwtConfig.getExpirationTime());

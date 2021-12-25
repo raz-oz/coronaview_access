@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Properties;
 
 @Service
+@EnableAsync
 @AllArgsConstructor
 public class RegistrationService implements IRegistrationService{
     private static final String ROLE_MONITOR = "3";
@@ -37,21 +39,23 @@ public class RegistrationService implements IRegistrationService{
     @Autowired
     private final EmailSender emailSender;
 
+
     public String register(RegistrationRequest request) {
+        System.out.println("1");
         boolean isValidEmail = emailValidator.
                 test(request.getEmail());
-
+        System.out.println("2");
         if (!isValidEmail) {
             throw new IllegalStateException("email not valid");
         }
-
+        System.out.println("3");
         String token = userAccessService.addUser(request.getUsername(), request.getPassword(), ROLE_MONITOR);
         String link = "http://localhost:8403/registration/confirm?token=" + token;
-
+        System.out.println("4");
         emailSender.send(
                 request.getEmail(),
                 buildEmail(request.getUsername(), link));
-
+        System.out.println("5");
         return token;
     }
 

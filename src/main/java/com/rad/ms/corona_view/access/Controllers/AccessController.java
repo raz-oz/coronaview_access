@@ -19,7 +19,7 @@ public class AccessController {
     @Autowired
     private IRegistrationService registrationService;
 
-    @GetMapping(value="/")
+    @GetMapping(value="/home")
     public String goHome(Principal user){
         String name = "guest";
         if (user!=null) {
