@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         OAUTH2
     }
 
-    private static final int security_config_method = securityType.OAUTH2.ordinal();
+    private static final int security_config_method = securityType.BASIC.ordinal();
 
     private Map<Integer, ConfigureHandler> configureHandlerMap  = Map.of(
             securityType.BASIC.ordinal(), (http -> {
