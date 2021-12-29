@@ -18,22 +18,22 @@ public class AccessController {
     private IRegistrationService registrationService;
 
     @GetMapping(value="/home")
-    public String goHome(Principal user){
-        String name = "guest";
-        if (user!=null) {
-            if (user.toString().contains("OAuth2AuthenticationToken")) {
-                OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) user;
-                OAuth2User oAuth2User = oAuth2AuthenticationToken.getPrincipal();
-                name = (String) oAuth2User.getAttributes().get("name");
-            }
-            else {
-                name = user.getName();
-            }
-        }
-        return "Hello "+name;
+    public String Home(Principal user){
+        return goHome(user);
     }
 
-
+    @GetMapping(value="/")
+    public String go(Principal user){
+        return goHome(user);
+    }
+    @PostMapping(value = "/login/bearer")
+    public String bearerLogin(@RequestBody String userName,  String password) {
+        return "ok";
+    }
+    @GetMapping(value = "/login/basic")
+    public String basicLogin(@RequestBody String userName,  String password) {
+        return "ok";
+    }
     @GetMapping(value="/login/oauth2")
     public Map<String, String> oauth2Login(){
         Map<String,String> response = new HashMap<>();
@@ -59,4 +59,18 @@ public class AccessController {
         return attributes.get("name") + " logged in successfully";
     }
 
+    public String goHome(Principal user){
+        String name = "guest";
+        if (user!=null) {
+            if (user.toString().contains("OAuth2AuthenticationToken")) {
+                OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) user;
+                OAuth2User oAuth2User = oAuth2AuthenticationToken.getPrincipal();
+                name = (String) oAuth2User.getAttributes().get("name");
+            }
+            else {
+                name = user.getName();
+            }
+        }
+        return "Hello "+name;
+    }
 }
