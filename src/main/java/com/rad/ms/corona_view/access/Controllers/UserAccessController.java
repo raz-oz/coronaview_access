@@ -60,7 +60,7 @@ public class UserAccessController {
     @DeleteMapping(value="{user_id}")
     @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
     public void deleteUser(@PathVariable(value = "user_id") String userId){
-        blockAdminDelete( userId);
+        blockAdminDelete(userId);
         accessService.deleteUser(userId);
     }
 
@@ -70,7 +70,7 @@ public class UserAccessController {
     public void blockAdminDelete(String id){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> Permissions =  auth.getAuthorities();
-        if(Permissions.toString().contains("all")){
+        if(auth.getPrincipal().toString().equals(id)){
             throw  new DeletePermissionException(((User)auth.getPrincipal()).getUsername());
         }
     }
