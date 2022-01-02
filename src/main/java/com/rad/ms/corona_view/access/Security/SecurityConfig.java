@@ -76,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
             })
     );
 
-@Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         configureHandlerMap.get(security_config_method).myConfigure(http);
     }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
+
 /**"""all", "data_read", "data_write", "user_read", "user_write", "role_read", "role_write"""*/
 @RestController
 @RequestMapping("/users")
