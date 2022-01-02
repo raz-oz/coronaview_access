@@ -1,6 +1,7 @@
 package com.rad.ms.corona_view.access.Controllers;
 
 import com.rad.ms.corona_view.access.Entities.User;
+import com.rad.ms.corona_view.access.ErrorHandling.DeletePermissionException;
 import com.rad.ms.corona_view.access.ErrorHandling.PermissionException;
 import com.rad.ms.corona_view.access.Registration.IRegistrationService;
 import com.rad.ms.corona_view.access.Registration.RegistrationRequest;
@@ -58,11 +59,20 @@ public class UserAccessController {
     @DeleteMapping(value="{user_id}")
     @PreAuthorize("hasAuthority('all') || hasAuthority('user_write')")
     public void deleteUser(@PathVariable(value = "user_id") String userId){
+        blockAdminDelete( userId);
         accessService.deleteUser(userId);
     }
 
 
 
+
+    public void blockAdminDelete(String id){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> Permissions =  auth.getAuthorities();
+        if(Permissions.toString().contains("all")){
+            throw  new DeletePermissionException(((User)auth.getPrincipal()).getUsername());
+        }
+    }
 
     public void limitAccesses(String id){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,13 +15,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import java.util.Map;
 
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
     private interface ConfigureHandler {
         void myConfigure(HttpSecurity http) throws Exception;
@@ -34,9 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         OAUTH2
     }
 
-    private static final int security_config_method = securityType.OAUTH2.ordinal();
+    private static final int security_config_method = securityType.BASIC.ordinal();
 
-    private Map<Integer, ConfigureHandler> configureHandlerMap  = Map.of(
+    private final Map<Integer, ConfigureHandler> configureHandlerMap  = Map.of(
             securityType.BASIC.ordinal(), (http -> {
                 http
                         .csrf().disable()
@@ -48,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authenticated();
                 http.httpBasic();
             }),
+
             securityType.BEARER.ordinal(), (http -> {
                 http
                         .csrf().disable()
@@ -61,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authorizeRequests().anyRequest().authenticated();
                 http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
             }),
+
             securityType.OAUTH2.ordinal(), (http -> {
                 http
                         .authorizeRequests(a -> a
@@ -74,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             })
     );
 
-    @Override
+@Override
     protected void configure(HttpSecurity http) throws Exception {
         configureHandlerMap.get(security_config_method).myConfigure(http);
     }

@@ -44,6 +44,12 @@ public class ExceptionController {
         return ex.getMessage();
     }
 
+    @ResponseBody
+    @ExceptionHandler(DeletePermissionException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    String DeletePermissionHandler(DeletePermissionException ex) {
+        return ex.getMessage();
+    }
 //    @ResponseBody
 //    @ExceptionHandler(UserNotFoundException.class)
 //    @ResponseStatus(HttpStatus.NOT_FOUND)
